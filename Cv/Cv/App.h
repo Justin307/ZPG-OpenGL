@@ -9,6 +9,8 @@ private:
 	int width;
 	int height;
 	void printGLEWInfo();
+	static void error_callback(int error, const char* description);
+
 public: 
 	App();
 	void run();

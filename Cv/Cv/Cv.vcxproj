@@ -23,14 +23,18 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Rectangle.cpp" />
-    <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Rectangle.h" />
-    <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Transformation.h" />
     <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -13,35 +13,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+#include <string>
 
 //Include my headers
 #include "Triangle.h"
 #include "Rectangle.h"
-#include "ShaderProgram.h"
+#include "Shader.h"
+#include "Transformation.h"
+#include "Scene.h"
 
-static void error_callback(int error, const char* description) { fputs(description, stderr); }
-
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    printf("key_callback [%d,%d,%d,%d] \n", key, scancode, action, mods);
-}
-
-static void window_focus_callback(GLFWwindow* window, int focused) { printf("window_focus_callback \n"); }
-
-static void window_iconify_callback(GLFWwindow* window, int iconified) { printf("window_iconify_callback \n"); }
-
-static void window_size_callback(GLFWwindow* window, int width, int height) {
-    printf("resize %d, %d \n", width, height);
-    glViewport(0, 0, width, height);
-}
-
-static void cursor_callback(GLFWwindow* window, double x, double y) { printf("cursor_callback \n"); }
-
-static void button_callback(GLFWwindow* window, int button, int action, int mode) {
-    if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
-}
+void App::error_callback(int error, const char* description) { fputs(description, stderr); }
 
 const char* vertex_shader =
 "#version 330\n"
@@ -55,7 +36,7 @@ const char* fragment_shader =
 "#version 330\n"
 "out vec4 frag_colour;"
 "void main () {"
-"     frag_colour = vec4 (0.5, 0.0, 0.5, 1.0);"
+"     frag_colour = vec4 (0.5, 0.5, 0.0, 1.0);"
 "}";
 
 const char* vertex_shader2 =
@@ -69,7 +50,7 @@ const char* fragment_shader2 =
 "#version 330\n"
 "out vec4 frag_colour;"
 "void main () {"
-"     frag_colour = vec4 (0.5, 0.5, 0.0, 1.0);"
+"     frag_colour = vec4 (0.0, 0.5, 0.5, 1.0);"
 "}";
 
 float points[] = {
@@ -139,34 +120,32 @@ void App::run()
     //GLEW
     printGLEWInfo();
 
-    glm::mat4 M = glm::mat4(1.0f);
-    //M = glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    M = glm::rotate(M, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    //M = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    //M = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-
+    Transformation* t = (new TransformationRotate(glm::radians(45.f), glm::vec3(0.0f, 0.0f, 1.0f)));
 
     //Create shader program
-    ShaderProgram* sp = new ShaderProgram(vertex_shader, fragment_shader);
+    Shader* shaderWithMatrix = new Shader(vertex_shader, fragment_shader);
+    Shader* shaderWithoutMatrix = new Shader(vertex_shader2, fragment_shader2);
 
     //Create triangle
-    Model* m = new Triangle(points, sizeof(points));
+    Model* tri = new Triangle(points, sizeof(points), shaderWithoutMatrix);
+    Model* quatro = new Rectangle(points3, sizeof(points3), shaderWithMatrix, t);
+
+    //Create scene
+    Scene* scene = new Scene();
+    scene->AddModel(quatro);
+    scene->AddModel(tri);
 
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        sp->UseMe();
-        glUniformMatrix4fv(sp->GetModelId(), 1, GL_FALSE, &M[0][0]);
-        m->RenderMe();
+        scene->Render();
 
         // update other events like input handling
         glfwPollEvents();
         // put the stuff we’ve been drawing onto the display
         glfwSwapBuffers(window);
     }
-
-    delete sp;
 
     glfwDestroyWindow(window);
 

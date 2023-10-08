@@ -6,6 +6,9 @@ private:
 
 public:
 	Rectangle(float points[], uint8_t size);
-	void RenderMe();
+	Rectangle(float points[], uint8_t size, Shader* shader);
+	Rectangle(float points[], uint8_t size, Shader* shader, Transformation* transformation);
+	void Render(Transformation* transformation, std::string location);
+	void Render();
 };
 
