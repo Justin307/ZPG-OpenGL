@@ -32,7 +32,7 @@ Triangle::Triangle(float points[], uint8_t size, Shader* shader)
     this->shader = shader;
 }
 
-Triangle::Triangle(float points[], uint8_t size, Shader* shader, Transformation* transformation)
+Triangle::Triangle(float points[], uint8_t size, Shader* shader, TransformationComponent* transformation)
 {
     //vertex buffer object (VBO)
     glGenBuffers(1, &VBO); // generate the VBO
@@ -54,17 +54,23 @@ Triangle::Triangle(float points[], uint8_t size, Shader* shader, Transformation*
 void Triangle::Render()
 {
     shader->Use();
-    if (this->transformation != nullptr)
-        shader->SetUniformLocationValue(std::string("modelMatrix"), transformation->GetTransformationMatrix());
+    if (transformation != nullptr)
+    {
+        glm::mat4 matrix = glm::mat4(1.0f);
+        this->transformation->ApplyTransformation(matrix);
+        shader->SetUniformLocationValue(std::string("modelMatrix"), matrix);
+    }
     glBindVertexArray(this->VAO);
     // draw triangle
     glDrawArrays(GL_TRIANGLES, 0, 3); //mode,first,count
 }
 
-void Triangle::Render(Transformation* transformation, std::string location)
+void Triangle::Render(TransformationComponent* transformation, std::string location)
 {
     shader->Use();
-    shader->SetUniformLocationValue(location, transformation->GetTransformationMatrix());
+    glm::mat4 matrix = glm::mat4(1.0f);
+    transformation->ApplyTransformation(matrix);
+    shader->SetUniformLocationValue(std::string("modelMatrix"), matrix);
     glBindVertexArray(this->VAO);
     // draw triangle
     glDrawArrays(GL_TRIANGLES, 0, 3); //mode,first,count

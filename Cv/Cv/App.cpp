@@ -19,7 +19,10 @@
 #include "Triangle.h"
 #include "Rectangle.h"
 #include "Shader.h"
-#include "Transformation.h"
+#include "TransformationComposite.h"
+#include "TransformationRotate.h"
+#include "TransformationScale.h"
+#include "TransformationTranslate.h"
 #include "Scene.h"
 
 void App::error_callback(int error, const char* description) { fputs(description, stderr); }
@@ -120,7 +123,14 @@ void App::run()
     //GLEW
     printGLEWInfo();
 
-    Transformation* t = (new TransformationRotate(glm::radians(45.f), glm::vec3(0.0f, 0.0f, 1.0f)));
+    TransformationComposite rotation;
+    rotation.AddTransformation(new TransformationRotate(glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+    TransformationComposite translation;
+    translation.AddTransformation(new TransformationTranslate(glm::vec3(-0.1f, -0.1f, -0.1f)));
+    TransformationComposite *transformation = new TransformationComposite();
+    transformation->AddTransformation(&rotation);
+    transformation->AddTransformation(&translation);
+    transformation->AddTransformation(new TransformationScale(glm::vec3(0.5f)));
 
     //Create shader program
     Shader* shaderWithMatrix = new Shader(vertex_shader, fragment_shader);
@@ -128,12 +138,12 @@ void App::run()
 
     //Create triangle
     Model* tri = new Triangle(points, sizeof(points), shaderWithoutMatrix);
-    Model* quatro = new Rectangle(points3, sizeof(points3), shaderWithMatrix, t);
+    Model* quatro = new Rectangle(points3, sizeof(points3), shaderWithMatrix, transformation);
 
     //Create scene
     Scene* scene = new Scene();
-    scene->AddModel(quatro);
     scene->AddModel(tri);
+    scene->AddModel(quatro);
 
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer

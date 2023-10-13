@@ -33,7 +33,7 @@ Rectangle::Rectangle(float points[], uint8_t size, Shader* shader)
     this->shader = shader;
 }
 
-Rectangle::Rectangle(float points[], uint8_t size, Shader* shader, Transformation* transformation)
+Rectangle::Rectangle(float points[], uint8_t size, Shader* shader, TransformationComponent* transformation)
 {
     //vertex buffer object (VBO)
     glGenBuffers(1, &VBO); // generate the VBO
@@ -55,17 +55,24 @@ Rectangle::Rectangle(float points[], uint8_t size, Shader* shader, Transformatio
 void Rectangle::Render()
 {
     shader->Use();
-    if(transformation != nullptr)
-        shader->SetUniformLocationValue(std::string("modelMatrix"), transformation->GetTransformationMatrix());
+    if (transformation != nullptr)
+    {
+        glm::mat4 matrix = glm::mat4(1.0f);
+        this->transformation->ApplyTransformation(matrix);
+        shader->SetUniformLocationValue(std::string("modelMatrix"), matrix);
+    }
     glBindVertexArray(this->VAO);
     // draw triangle
     glDrawArrays(GL_TRIANGLES, 0, 6); //mode,first,count
 }
 
-void Rectangle::Render(Transformation* transformation, std::string location)
+void Rectangle::Render(TransformationComponent* transformation, std::string location)
 {
     shader->Use();
-    shader->SetUniformLocationValue(location, transformation->GetTransformationMatrix());
+    glm::mat4 matrix = glm::mat4(1.0f);
+    transformation->ApplyTransformation(matrix);
+    shader->SetUniformLocationValue(std::string("modelMatrix"), matrix);
+    shader->SetUniformLocationValue(location, matrix);
     glBindVertexArray(this->VAO);
     // draw triangle
     glDrawArrays(GL_TRIANGLES, 0, 6); //mode,first,count

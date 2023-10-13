@@ -25,7 +25,12 @@
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Transformation.cpp" />
+    <ClCompile Include="TransformationComponent.cpp" />
+    <ClCompile Include="TransformationComposite.cpp" />
+    <ClCompile Include="TransformationRotate.cpp" />
+    <ClCompile Include="TransformationScale.cpp" />
+    <ClCompile Include="TransformationTranslate.h" />
+    <ClCompile Include="TransformationTranslate.cpp" />
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -34,7 +39,10 @@
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="Transformation.h" />
+    <ClInclude Include="TransformationComponent.h" />
+    <ClInclude Include="TransformationRotate.h" />
+    <ClInclude Include="TransformationScale.h" />
+    <ClInclude Include="TransformationComposite.h" />
     <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
