@@ -2,16 +2,14 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h> 
 
-#include "TransformationComponent.h"
-#include "Shader.h"
-
 class Model
 {
 protected:
-	GLuint VAO = 0;
-	GLuint VBO = 0;
-	Shader* shader = 0;
+	GLuint VAO;
+	GLuint VBO;
+	uint32_t verticeCount;
 public:
-	virtual void Render() = 0;
+	Model(float points[], uint8_t size);
+	void Render();
 };
 

@@ -16,8 +16,6 @@
 #include <string>
 
 //Include my headers
-#include "Triangle.h"
-#include "Rectangle.h"
 #include "Shader.h"
 #include "TransformationComposite.h"
 #include "TransformationRotate.h"
@@ -137,8 +135,8 @@ void App::run()
     Shader* shaderWithoutMatrix = new Shader(vertex_shader2, fragment_shader2);
 
     //Create triangle
-    Model* tri = new Triangle(points, sizeof(points));
-    Model* quatro = new Rectangle(points3, sizeof(points3));
+    Model* tri = new Model(points, sizeof(points));
+    Model* quatro = new Model(points3, sizeof(points3));
 
     //Create scene
     Scene* scene = new Scene();

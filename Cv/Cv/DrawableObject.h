@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Model.h"
+#include "Shader.h"
+#include "TransformationComponent.h"
 
 class DrawableObject
 {

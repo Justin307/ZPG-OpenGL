@@ -23,7 +23,6 @@
     <ClCompile Include="DrawableObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="TransformationComponent.cpp" />
@@ -32,20 +31,17 @@
     <ClCompile Include="TransformationScale.cpp" />
     <ClCompile Include="TransformationTranslate.h" />
     <ClCompile Include="TransformationTranslate.cpp" />
-    <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="DrawableObject.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="TransformationComponent.h" />
     <ClInclude Include="TransformationRotate.h" />
     <ClInclude Include="TransformationScale.h" />
     <ClInclude Include="TransformationComposite.h" />
-    <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
