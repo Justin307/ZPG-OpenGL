@@ -23,5 +23,6 @@ public:
 	GLint GetUniformLocation(char* name);
 	void SetUniformLocationValue(std::string location, glm::mat4 matrix);
 	void SetUniformLocationValue(char* location, glm::mat4 matrix);
+	void CheckShader();
 };
 

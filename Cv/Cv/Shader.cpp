@@ -46,3 +46,18 @@ void Shader::SetUniformLocationValue(char* location, glm::mat4 matrix)
         glUniformMatrix4fv(uniformLocationId, 1, GL_FALSE, &matrix[0][0]);
     }
 }
+
+void Shader::CheckShader()
+{
+    GLint status;
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);
+    if (status == GL_FALSE)
+    {
+        GLint infoLogLength;
+        glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLogLength);
+        GLchar* strInfoLog = new GLchar[infoLogLength + 1];
+        glGetProgramInfoLog(shaderProgram, infoLogLength, NULL, strInfoLog);
+        fprintf(stderr, "Linker failure: %s\n", strInfoLog);
+        delete[] strInfoLog;
+    }
+}

@@ -9,7 +9,7 @@ protected:
 	GLuint VBO;
 	uint32_t verticeCount;
 public:
-	Model(float points[], uint8_t size);
+	Model(const float points[], uint32_t size);
 	void Render();
 };
 

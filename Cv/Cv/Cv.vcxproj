@@ -36,6 +36,10 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="DrawableObject.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="models\plain.h" />
+    <ClInclude Include="models\sphere.h" />
+    <ClInclude Include="models\suzi_flat.h" />
+    <ClInclude Include="models\suzi_smooth.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="TransformationComponent.h" />
