@@ -20,9 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DrawableObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="TransformationComponent.cpp" />
@@ -34,12 +36,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="DrawableObject.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="models\plain.h" />
     <ClInclude Include="models\sphere.h" />
     <ClInclude Include="models\suzi_flat.h" />
     <ClInclude Include="models\suzi_smooth.h" />
+    <ClInclude Include="Observer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="TransformationComponent.h" />

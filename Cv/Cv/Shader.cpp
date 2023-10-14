@@ -1,4 +1,6 @@
 #include "Shader.h"
+#include "Camera.h"
+#include <string>
 
 Shader::Shader(const char* vertex_shader, const char* fragment_shader)
 {
@@ -14,9 +16,17 @@ Shader::Shader(const char* vertex_shader, const char* fragment_shader)
     glLinkProgram(shaderProgram);
 }
 
+void Shader::SetCamera(Camera* camera)
+{
+    this->camera = camera;
+    this->Update();
+}
+
 void Shader::Use()
 {
     glUseProgram(shaderProgram);
+    this->SetUniformLocationValue(std::string("projectionMatrix"), this->projectionMatrix);
+    this->SetUniformLocationValue(std::string("viewMatrix"), this->viewMatrix);
 }
 
 GLint Shader::GetUniformLocation(std::string name)
@@ -60,4 +70,10 @@ void Shader::CheckShader()
         fprintf(stderr, "Linker failure: %s\n", strInfoLog);
         delete[] strInfoLog;
     }
+}
+
+void Shader::Update()
+{
+    this->viewMatrix = this->camera->GetView();
+    this->projectionMatrix = this->camera->GetProjection();
 }

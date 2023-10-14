@@ -22,6 +22,7 @@
 #include "TransformationScale.h"
 #include "TransformationTranslate.h"
 #include "Scene.h"
+#include "Camera.h"
 
 //Include models
 #include "models/sphere.h"
@@ -35,9 +36,11 @@ const char* vertex_shader =
 "layout(location=0) in vec3 vp;"
 "layout(location=1) in vec3 vertex_color;"
 "uniform mat4 modelMatrix;"
+"uniform mat4 viewMatrix;"
+"uniform mat4 projectionMatrix;"
 "out vec3 color;"
 "void main () {"
-"     gl_Position = modelMatrix * vec4 (vp, 1.0);"
+"     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4 (vp, 1.0);"
 "     color = vertex_color;"
 "}";
 
@@ -53,9 +56,11 @@ const char* vertex_shader2 =
 "#version 330\n"
 "layout(location=0) in vec3 vp;"
 "layout(location=1) in vec3 vertex_color;"
+"uniform mat4 viewMatrix;"
+"uniform mat4 projectionMatrix;"
 "out vec3 color;"
 "void main () {"
-"     gl_Position = vec4 (vp, 1.0);"
+"     gl_Position = projectionMatrix * viewMatrix * vec4 (vp, 1.0);"
 "     color = vertex_color;"
 "}";
 
@@ -133,10 +138,15 @@ void App::run()
     shaderWithMatrix->CheckShader();
     shaderWithoutMatrix->CheckShader();
 
+    Camera* camera = new Camera();
+    camera->AttachObserver(shaderWithoutMatrix);
+    
+    shaderWithoutMatrix->SetCamera(camera);
+
     //Create scene
     Scene* scene = new Scene();
-    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix));
-    //scene->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), shaderWithMatrix, transformation));
+    //scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix));
+    scene->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), shaderWithoutMatrix));
 
     /*
     *   https://learnopengl.com/Advanced-OpenGL/Face-culling
