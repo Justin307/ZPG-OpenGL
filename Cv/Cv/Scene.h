@@ -1,13 +1,13 @@
 #pragma once
 #include <vector>
-#include "Model.h"
+#include "DrawableObject.h"
 class Scene
 {
 private:
-	std::vector<Model*> models;
+	std::vector<DrawableObject*> models;
 public:
 	Scene();
-	void AddModel(Model* model);
+	void AddModel(DrawableObject* model);
 	void Render();
 };
 

@@ -137,20 +137,19 @@ void App::run()
     Shader* shaderWithoutMatrix = new Shader(vertex_shader2, fragment_shader2);
 
     //Create triangle
-    Model* tri = new Triangle(points, sizeof(points), shaderWithoutMatrix);
-    Model* quatro = new Rectangle(points3, sizeof(points3), shaderWithMatrix, transformation);
+    Model* tri = new Triangle(points, sizeof(points));
+    Model* quatro = new Rectangle(points3, sizeof(points3));
 
     //Create scene
     Scene* scene = new Scene();
-    scene->AddModel(tri);
-    scene->AddModel(quatro);
+    scene->AddModel(new DrawableObject(tri, shaderWithoutMatrix));
+    scene->AddModel(new DrawableObject(quatro, shaderWithMatrix, transformation));
 
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+        // render scene
         scene->Render();
-
         // update other events like input handling
         glfwPollEvents();
         // put the stuff we’ve been drawing onto the display

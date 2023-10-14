@@ -4,14 +4,14 @@ Scene::Scene()
 {
 }
 
-void Scene::AddModel(Model* model)
+void Scene::AddModel(DrawableObject* model)
 {
 	models.push_back(model);
 }
 
 void Scene::Render()
 {
-	for (Model* model : models)
+	for (DrawableObject* model : models)
 	{
 		model->Render();
 	}

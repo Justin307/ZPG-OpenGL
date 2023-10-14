@@ -11,9 +11,7 @@ protected:
 	GLuint VAO = 0;
 	GLuint VBO = 0;
 	Shader* shader = 0;
-	TransformationComponent* transformation = 0;
 public:
 	virtual void Render() = 0;
-	virtual void Render(TransformationComponent* transformation, std::string location) = 0;
 };
 
