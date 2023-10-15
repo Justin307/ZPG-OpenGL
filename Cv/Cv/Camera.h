@@ -10,6 +10,8 @@ private:
     glm::vec3 eye;
     glm::vec3 center;
     glm::vec3 up;
+    float alpha;
+    float fi;
     std::vector<Observer*> observers;
     void NotifyObservers();
 public:
@@ -20,6 +22,7 @@ public:
     void MoveBack();
     void MoveLeft();
     void MoveRight();
+    void MoveMouse(float x, float y);
     void AttachObserver(Observer* observer);
     void DettachObserver(Observer* observer);
 };

@@ -11,6 +11,9 @@
 * and the positive z-axis going through your screen towards you.
 */
 
+/*
+*	https://youtu.be/AWM4CUfffos?si=hKDdLWjiXjY9RI-K
+*/
 void Camera::NotifyObservers()
 {
 	for (auto& x : this->observers)
@@ -21,7 +24,9 @@ Camera::Camera()
 {
 	this->eye = { 0.0f, 0.0f, 0.0f };
 	this->center = { 0.1f, 0.0f, -0.1f };
-	this->up = { 0.0f, -0.1f, 0.0f };
+	this->up = { 0.0f, 0.1f, 0.0f };
+	this->alpha = 0;
+	this->fi = 0;
 }
 
 glm::mat4 Camera::GetView()
@@ -31,7 +36,7 @@ glm::mat4 Camera::GetView()
 
 glm::mat4 Camera::GetProjection()
 {
-	return glm::perspective(60.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	return glm::perspective(1.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 }
 
 /*
@@ -53,13 +58,31 @@ void Camera::MoveBack()
 
 void Camera::MoveLeft()
 {
-	eye += (glm::normalize(glm::cross(center, up)));
+	eye -= (glm::normalize(glm::cross(center, up)));
 	this->NotifyObservers();
 }
 
 void Camera::MoveRight()
 {
-	eye -= (glm::normalize(glm::cross(center, up)));
+	eye += (glm::normalize(glm::cross(center, up)));
+	this->NotifyObservers();
+}
+
+void Camera::MoveMouse(float x, float y)
+{
+	this->fi += (x*-0.1);
+	this->alpha += (y*0.1);
+
+	if (this->alpha > 89.0f)
+		this->alpha = 89.0f;
+	if (this->alpha < -89.0f)
+		this->alpha = -89.0f;
+
+	glm::vec3 c;
+	c.x = cos(glm::radians(this->alpha)) * cos(glm::radians(this->fi));
+	c.y = sin(glm::radians(this->alpha));
+	c.z = cos(glm::radians(this->alpha)) * sin(glm::radians(this->fi));
+	this->center = glm::normalize(c);
 	this->NotifyObservers();
 }
 

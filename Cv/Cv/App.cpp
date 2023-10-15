@@ -53,7 +53,11 @@ void App::key_callback(GLFWwindow* window, int key, int scancode, int action, in
 
 void App::cursor_callback(GLFWwindow* window, double x, double y)
 {
-
+    double xDiff = App::GetInstance()->xPos - x;
+    double yDiff = App::GetInstance()->yPos - y;
+    App::GetInstance()->xPos = x;
+    App::GetInstance()->yPos = y;
+    App::GetInstance()->camera->MoveMouse(xDiff, yDiff);
 }
 
 const char* vertex_shader =
@@ -141,7 +145,11 @@ App::App()
     glfwGetFramebufferSize(window, &width, &height);
 
     glViewport(0, 0, width, height);
+
     glfwSetKeyCallback(this->window, key_callback);
+    glfwSetCursorPosCallback(window, cursor_callback);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void App::run()
@@ -152,7 +160,7 @@ void App::run()
     TransformationComposite rotation;
     rotation.AddTransformation(new TransformationRotate(glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
     TransformationComposite translation;
-    translation.AddTransformation(new TransformationTranslate(glm::vec3(0.1f, 0.1f, 0.1f)));
+    translation.AddTransformation(new TransformationTranslate(glm::vec3(0.0f, 0.0f, 0.5f)));
     TransformationComposite *transformation = new TransformationComposite();
     transformation->AddTransformation(&rotation);
     transformation->AddTransformation(&translation);
@@ -171,7 +179,7 @@ void App::run()
 
     //Create scene
     Scene* scene = new Scene();
-    //scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix));
     scene->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), shaderWithoutMatrix));
 
     /*

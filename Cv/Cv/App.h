@@ -15,6 +15,8 @@ private:
 	static void cursor_callback(GLFWwindow* window, double x, double y);
 	App();
 	static App* app;
+	double yPos = 300;
+	double xPos = 400;
 	Camera* camera;
 
 public: 
