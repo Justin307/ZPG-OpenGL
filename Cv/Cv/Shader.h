@@ -23,7 +23,6 @@ private:
 	Camera* camera = nullptr;;
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
 	glm::mat4 projectionMatrix = glm::mat4(1.0f);;
-	// Add camera matrix
 public:
 	Shader(const char* vertex_shader, const char* fragment_shader);
 	void SetCamera(Camera* camera);

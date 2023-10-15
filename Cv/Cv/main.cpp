@@ -15,9 +15,8 @@
 
 int main()
 {
-    App app{};
-
-    app.run();
+    App* app = App::GetInstance();
+    app->run();
 
     exit(EXIT_SUCCESS);
 }

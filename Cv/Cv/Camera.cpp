@@ -4,10 +4,10 @@
 #include <glm/ext/matrix_clip_space.hpp>
 
 /*
-* By convention, OpenGL is a right-handed system. 
-* What this basically says is that the positive x-axis is to your right, 
-* the positive y-axis is up and the positive z-axis is backwards. 
-* Think of your screen being the center of the 3 axes 
+* By convention, OpenGL is a right-handed system.
+* What this basically says is that the positive x-axis is to your right,
+* the positive y-axis is up and the positive z-axis is backwards.
+* Think of your screen being the center of the 3 axes
 * and the positive z-axis going through your screen towards you.
 */
 
@@ -20,8 +20,8 @@ void Camera::NotifyObservers()
 Camera::Camera()
 {
 	this->eye = { 0.0f, 0.0f, 0.0f };
-	this->center = { 1.0f, 0.0f, -1.0f };
-	this->up = { 0.0f, 1.0f, 0.0f };
+	this->center = { 0.1f, 0.0f, -0.1f };
+	this->up = { 0.0f, -0.1f, 0.0f };
 }
 
 glm::mat4 Camera::GetView()

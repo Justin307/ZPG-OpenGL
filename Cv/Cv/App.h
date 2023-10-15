@@ -1,6 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 #include <GLFW/glfw3.h> 
+#include "Camera.h"
 
 class App
 {
@@ -10,9 +11,14 @@ private:
 	int height;
 	void printGLEWInfo();
 	static void error_callback(int error, const char* description);
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void cursor_callback(GLFWwindow* window, double x, double y);
+	App();
+	static App* app;
+	Camera* camera;
 
 public: 
-	App();
 	void run();
+	static App* GetInstance();
 };
 

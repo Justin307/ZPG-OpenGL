@@ -31,6 +31,31 @@
 
 void App::error_callback(int error, const char* description) { fputs(description, stderr); }
 
+void App::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_W && action == GLFW_PRESS)
+    {
+        App::GetInstance()->camera->MoveFront();
+    }
+    else if (key == GLFW_KEY_S && action == GLFW_PRESS)
+    {
+        App::GetInstance()->camera->MoveBack();
+    }
+    else if (key == GLFW_KEY_A && action == GLFW_PRESS)
+    {
+        App::GetInstance()->camera->MoveLeft();
+    }
+    else if (key == GLFW_KEY_D && action == GLFW_PRESS)
+    {
+        App::GetInstance()->camera->MoveRight();
+    }
+}
+
+void App::cursor_callback(GLFWwindow* window, double x, double y)
+{
+
+}
+
 const char* vertex_shader =
 "#version 330\n"
 "layout(location=0) in vec3 vp;"
@@ -116,6 +141,7 @@ App::App()
     glfwGetFramebufferSize(window, &width, &height);
 
     glViewport(0, 0, width, height);
+    glfwSetKeyCallback(this->window, key_callback);
 }
 
 void App::run()
@@ -138,9 +164,9 @@ void App::run()
     shaderWithMatrix->CheckShader();
     shaderWithoutMatrix->CheckShader();
 
-    Camera* camera = new Camera();
+    this->camera = new Camera();
     camera->AttachObserver(shaderWithoutMatrix);
-    
+
     shaderWithoutMatrix->SetCamera(camera);
 
     //Create scene
@@ -152,9 +178,10 @@ void App::run()
     *   https://learnopengl.com/Advanced-OpenGL/Face-culling
     */
 
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    camera->MoveBack();
+    camera->MoveBack();
 
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
@@ -170,4 +197,13 @@ void App::run()
     glfwDestroyWindow(window);
 
     glfwTerminate();
+}
+
+App* App::app = 0;
+
+App* App::GetInstance()
+{
+    if (!app)
+        app = new App();
+    return app;
 }
