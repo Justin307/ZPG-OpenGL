@@ -49,6 +49,14 @@ void App::key_callback(GLFWwindow* window, int key, int scancode, int action, in
     {
         App::GetInstance()->camera->MoveRight();
     }
+    else if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS)
+    {
+        App::GetInstance()->camera->MoveUp();
+    }
+    else if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS)
+    {
+        App::GetInstance()->camera->MoveDown();
+    }
 }
 
 void App::cursor_callback(GLFWwindow* window, double x, double y)

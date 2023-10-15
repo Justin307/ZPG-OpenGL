@@ -22,6 +22,8 @@ public:
     void MoveBack();
     void MoveLeft();
     void MoveRight();
+    void MoveUp();
+    void MoveDown();
     void MoveMouse(float x, float y);
     void AttachObserver(Observer* observer);
     void DettachObserver(Observer* observer);
