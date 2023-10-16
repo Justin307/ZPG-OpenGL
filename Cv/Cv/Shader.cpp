@@ -1,6 +1,19 @@
 #include "Shader.h"
 #include "Camera.h"
 #include <string>
+#include <fstream>
+
+std::string Shader::LoadFromFile(std::string filename)
+{
+    return LoadFromFile(filename.c_str());
+}
+
+std::string Shader::LoadFromFile(char* filename)
+{
+    //TODO
+    std::string content;
+    return content;
+}
 
 Shader::Shader(const char* vertex_shader, const char* fragment_shader)
 {
@@ -60,6 +73,26 @@ void Shader::SetUniformLocationValue(char* location, glm::mat4 matrix)
 void Shader::CheckShader()
 {
     GLint status;
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
+    if (status == GL_FALSE)
+    {
+        GLint maxLength = 0;
+        glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
+        GLchar* strInfoLog = new GLchar[maxLength + 1];
+        glGetShaderInfoLog(vertexShader, maxLength, NULL, strInfoLog);
+        fprintf(stderr, "Compile failure: %s\n", strInfoLog);
+    }
+
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &status);
+    if (status == GL_FALSE)
+    {
+        GLint maxLength = 0;
+        glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
+        GLchar* strInfoLog = new GLchar[maxLength + 1];
+        glGetShaderInfoLog(fragmentShader, maxLength, NULL, strInfoLog);
+        fprintf(stderr, "Compile failure: %s\n", strInfoLog);
+    }
+
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);
     if (status == GL_FALSE)
     {

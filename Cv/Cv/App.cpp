@@ -71,22 +71,33 @@ void App::cursor_callback(GLFWwindow* window, double x, double y)
 const char* vertex_shader2 =
 "#version 330\n"
 "layout(location=0) in vec3 vp;"
-"layout(location=1) in vec3 vertex_color;"
+"layout(location=1) in vec3 vn;"
 "uniform mat4 modelMatrix;"
 "uniform mat4 viewMatrix;"
 "uniform mat4 projectionMatrix;"
 "out vec3 color;"
+"out vec4 worldPos;"
+"out vec3 worldNorm;"
 "void main () {"
+"     worldPos = modelMatrix * vec4(vp, 1.0);"
+"     mat4 normal = modelMatrix;"
+"     worldNorm = vec3(normal * vec4(vn, 1.0));"
 "     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4 (vp, 1.0);"
-"     color = vertex_color;"
 "}";
 
 const char* fragment_shader2 =
 "#version 330\n"
-"in vec3 color;"
+"in vec4 worldPos;"
+"in vec3 worldNor;"
 "out vec4 frag_colour;"
 "void main () {"
-"     frag_colour = vec4 (color, 1.0);"
+"   vec3 lightPosition = vec3(1.0, 1.0, 1.0);"
+"   vec3 lightDir = lightPosition - worldPos.xyz;"
+"   float diff = max(dot(normalize(lightDir), normalize(worldNor)),0.0);"
+"   vec4 diffuse = diff * vec4(1.0,1.0,1.0,1.0);"
+"   vec4 ambient = vec4(0.1, 0.1, 0.1, 1.0);"
+"   vec4 objectColor = vec4(0.385, 0.647, 0.812, 1.0);"
+"   frag_colour = (ambient + diffuse) * objectColor;"
 "}";
 
 
