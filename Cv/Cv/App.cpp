@@ -68,27 +68,6 @@ void App::cursor_callback(GLFWwindow* window, double x, double y)
     App::GetInstance()->camera->MoveMouse(xDiff, yDiff);
 }
 
-const char* vertex_shader =
-"#version 330\n"
-"layout(location=0) in vec3 vp;"
-"layout(location=1) in vec3 vertex_color;"
-"uniform mat4 modelMatrix;"
-"uniform mat4 viewMatrix;"
-"uniform mat4 projectionMatrix;"
-"out vec3 color;"
-"void main () {"
-"     gl_Position = projectionMatrix * viewMatrix * mat4(1.0) * vec4 (vp, 1.0);"
-"     color = vertex_color;"
-"}";
-
-const char* fragment_shader =
-"#version 330\n"
-"in vec3 color;"
-"out vec4 frag_colour;"
-"void main () {"
-"     frag_colour = vec4 (color, 1.0);"
-"}";
-
 const char* vertex_shader2 =
 "#version 330\n"
 "layout(location=0) in vec3 vp;"
@@ -166,19 +145,13 @@ void App::run()
     //GLEW
     printGLEWInfo();
 
-    TransformationComposite rotation;
-    rotation.AddTransformation(new TransformationRotate(glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-    TransformationComposite translation;
-    translation.AddTransformation(new TransformationTranslate(glm::vec3(0.0f, 0.0f, 0.5f)));
-    TransformationComposite *transformation = new TransformationComposite();
-    transformation->AddTransformation(&rotation);
-    transformation->AddTransformation(&translation);
-    //transformation->AddTransformation(new TransformationScale(glm::vec3(0.5f)));
+    TransformationTranslate* transformation1 = new TransformationTranslate(glm::vec3(2.0f, 0.0f, 0.0f));
+    TransformationTranslate* transformation2 = new TransformationTranslate(glm::vec3(-2.0f, 0.0f, 0.0f));
+    TransformationTranslate* transformation3 = new TransformationTranslate(glm::vec3(0.0f, 0.0f, 2.0f));
+    TransformationTranslate* transformation4 = new TransformationTranslate(glm::vec3(0.0f, 0.0f, -2.0f));
 
     //Create shader program
-    Shader* shaderWithMatrix = new Shader(vertex_shader, fragment_shader);
     Shader* shaderWithoutMatrix = new Shader(vertex_shader2, fragment_shader2);
-    shaderWithMatrix->CheckShader();
     shaderWithoutMatrix->CheckShader();
 
     this->camera = new Camera();
@@ -188,8 +161,11 @@ void App::run()
 
     //Create scene
     Scene* scene = new Scene();
-    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix));
-    scene->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), shaderWithoutMatrix, transformation));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix, transformation1));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix, transformation2));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix, transformation3));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix, transformation4));
+    //scene->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), shaderWithoutMatrix, transformation));
 
     /*
     *   https://learnopengl.com/Advanced-OpenGL/Face-culling
