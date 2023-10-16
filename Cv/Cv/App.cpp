@@ -77,7 +77,7 @@ const char* vertex_shader =
 "uniform mat4 projectionMatrix;"
 "out vec3 color;"
 "void main () {"
-"     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4 (vp, 1.0);"
+"     gl_Position = projectionMatrix * viewMatrix * mat4(1.0) * vec4 (vp, 1.0);"
 "     color = vertex_color;"
 "}";
 
@@ -93,11 +93,12 @@ const char* vertex_shader2 =
 "#version 330\n"
 "layout(location=0) in vec3 vp;"
 "layout(location=1) in vec3 vertex_color;"
+"uniform mat4 modelMatrix;"
 "uniform mat4 viewMatrix;"
 "uniform mat4 projectionMatrix;"
 "out vec3 color;"
 "void main () {"
-"     gl_Position = projectionMatrix * viewMatrix * vec4 (vp, 1.0);"
+"     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4 (vp, 1.0);"
 "     color = vertex_color;"
 "}";
 
@@ -157,7 +158,7 @@ App::App()
     glfwSetKeyCallback(this->window, key_callback);
     glfwSetCursorPosCallback(window, cursor_callback);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void App::run()
@@ -172,7 +173,7 @@ void App::run()
     TransformationComposite *transformation = new TransformationComposite();
     transformation->AddTransformation(&rotation);
     transformation->AddTransformation(&translation);
-    transformation->AddTransformation(new TransformationScale(glm::vec3(0.5f)));
+    //transformation->AddTransformation(new TransformationScale(glm::vec3(0.5f)));
 
     //Create shader program
     Shader* shaderWithMatrix = new Shader(vertex_shader, fragment_shader);
@@ -188,7 +189,7 @@ void App::run()
     //Create scene
     Scene* scene = new Scene();
     scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix));
-    scene->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), shaderWithoutMatrix));
+    scene->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), shaderWithoutMatrix, transformation));
 
     /*
     *   https://learnopengl.com/Advanced-OpenGL/Face-culling

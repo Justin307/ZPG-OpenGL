@@ -16,13 +16,13 @@ DrawableObject::DrawableObject(Model* model, Shader* shader, TransformationCompo
 void DrawableObject::Render()
 {
 	shader->Use();
+	char id[] = "modelMatrix";
+	glm::mat4 matrix = glm::mat4(1.0f);
 	if (transformation != nullptr)
 	{
-		glm::mat4 matrix = glm::mat4(1.0f);
 		transformation->ApplyTransformation(matrix);
-		char id[] = "modelMatrix";
-		shader->SetUniformLocationValue(id, matrix);
 	}
+	shader->SetUniformLocationValue(id, matrix);
 	model->Render();
 }
 
