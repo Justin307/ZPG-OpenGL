@@ -2,17 +2,24 @@
 #include "Camera.h"
 #include <string>
 #include <fstream>
+#include <sstream>
 
-std::string Shader::LoadFromFile(std::string filename)
+Shader* Shader::LoadFromFile(std::string vertex, std::string fragment)
 {
-    return LoadFromFile(filename.c_str());
+    return LoadFromFile(vertex.c_str(), fragment.c_str());
 }
 
-std::string Shader::LoadFromFile(char* filename)
+Shader* Shader::LoadFromFile(const char* vertex, const char* fragment)
 {
-    //TODO
-    std::string content;
-    return content;
+    std::ifstream v(vertex);
+    std::stringstream v_buffer;
+    v_buffer << v.rdbuf();
+    std::ifstream f(fragment);
+    std::stringstream f_buffer;
+    f_buffer << f.rdbuf();
+    std::string v_str = v_buffer.str();
+    std::string f_str = f_buffer.str();
+    return new Shader(v_str.c_str(), f_str.c_str());
 }
 
 Shader::Shader(const char* vertex_shader, const char* fragment_shader)

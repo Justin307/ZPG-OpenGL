@@ -24,8 +24,8 @@ private:
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
 	glm::mat4 projectionMatrix = glm::mat4(1.0f);;
 public:
-	static std::string LoadFromFile(std::string filename);
-	static std::string LoadFromFile(char* filename);
+	static Shader* LoadFromFile(std::string vertex, std::string fragment);
+	static Shader* LoadFromFile(const char* vertex, const char* fragment);
 	Shader(const char* vertex_shader, const char* fragment_shader);
 	void SetCamera(Camera* camera);
 	void Use();

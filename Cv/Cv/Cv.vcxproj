@@ -51,6 +51,10 @@
     <ClInclude Include="TransformationScale.h" />
     <ClInclude Include="TransformationComposite.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="lambert.frag" />
+    <None Include="vertex.vert" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
