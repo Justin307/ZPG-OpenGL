@@ -68,6 +68,37 @@ void App::cursor_callback(GLFWwindow* window, double x, double y)
     App::GetInstance()->camera->MoveMouse(xDiff, yDiff);
 }
 
+
+void App::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+    {
+        if (App::GetInstance()->cameraMovement)
+        {
+            App::GetInstance()->cameraMovement = false;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            //Move cursor to the center of the screen and center xPos/yPos
+        }
+        else
+        {
+            App::GetInstance()->cameraMovement = true;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+        
+    }
+        
+}
+
+void App::window_size_callback(GLFWwindow* window, int width, int height)
+{
+    App* app = App::GetInstance();
+    app->width = width;
+    app->height = height;
+    glfwSetWindowSize(window, width, height);
+    glViewport(0, 0, width, height);
+    app->camera->SetWidthHeight(width, height);
+}
+
 void App::printGLEWInfo()
 {
     // start GLEW extension handler
@@ -114,8 +145,8 @@ App::App()
 
     glfwSetKeyCallback(this->window, key_callback);
     glfwSetCursorPosCallback(window, cursor_callback);
-
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetWindowSizeCallback(window, window_size_callback);
 }
 
 void App::run()

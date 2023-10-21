@@ -27,6 +27,9 @@ Camera::Camera()
 	this->up = { 0.0f, 0.1f, 0.0f };
 	this->alpha = 0;
 	this->fi = 0;
+	this->widht = 800;
+	this->height = 600;
+
 }
 
 glm::mat4 Camera::GetView()
@@ -36,7 +39,7 @@ glm::mat4 Camera::GetView()
 
 glm::mat4 Camera::GetProjection()
 {
-	return glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+	return glm::perspective(glm::radians(60.0f), this->widht / this->height, 0.1f, 100.0f);
 }
 
 /*
@@ -106,4 +109,11 @@ void Camera::AttachObserver(Observer* observer)
 void Camera::DettachObserver(Observer* observer)
 {
 	observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
+}
+
+void Camera::SetWidthHeight(float width, float height)
+{
+	this->widht = width;
+	this->height = height;
+	this->NotifyObservers();
 }

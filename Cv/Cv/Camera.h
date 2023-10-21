@@ -12,6 +12,8 @@ private:
     glm::vec3 up;
     float alpha;
     float fi;
+    float widht;
+    float height;
     std::vector<Observer*> observers;
     void NotifyObservers();
 public:
@@ -27,4 +29,5 @@ public:
     void MoveMouse(float x, float y);
     void AttachObserver(Observer* observer);
     void DettachObserver(Observer* observer);
+    void SetWidthHeight(float width, float height);
 };
