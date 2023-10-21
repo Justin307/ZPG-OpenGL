@@ -52,8 +52,11 @@
     <ClInclude Include="TransformationComposite.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="lambert.frag" />
-    <None Include="vertex.vert" />
+    <None Include="shaders\blinn.frag" />
+    <None Include="shaders\constant.frag" />
+    <None Include="shaders\lambert.frag" />
+    <None Include="shaders\phong.frag" />
+    <None Include="shaders\vertex.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

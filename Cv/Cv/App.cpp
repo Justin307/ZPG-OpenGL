@@ -61,11 +61,15 @@ void App::key_callback(GLFWwindow* window, int key, int scancode, int action, in
 
 void App::cursor_callback(GLFWwindow* window, double x, double y)
 {
-    double xDiff = App::GetInstance()->xPos - x;
-    double yDiff = App::GetInstance()->yPos - y;
-    App::GetInstance()->xPos = x;
-    App::GetInstance()->yPos = y;
-    App::GetInstance()->camera->MoveMouse(xDiff, yDiff);
+    App* app = App::GetInstance();
+    if (app->cameraMovement)
+    {
+        double xDiff = app->xPos - x;
+        double yDiff = app->yPos - y;
+        app->xPos = x;
+        app->yPos = y;
+        app->camera->MoveMouse(xDiff, yDiff);
+    }
 }
 
 
@@ -73,15 +77,26 @@ void App::mouse_button_callback(GLFWwindow* window, int button, int action, int 
 {
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
     {
-        if (App::GetInstance()->cameraMovement)
+        App* app = App::GetInstance();
+        if (app->cameraMovement)
         {
-            App::GetInstance()->cameraMovement = false;
+            app->cameraMovement = false;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             //Move cursor to the center of the screen and center xPos/yPos
+            double x = app->width / 2;
+            double y = app->height / 2;
+            glfwSetCursorPos(window, x, y);
+            app->xPos = x;
+            app->yPos = y;
         }
         else
         {
-            App::GetInstance()->cameraMovement = true;
+            app->cameraMovement = true;
+            double x = app->width / 2;
+            double y = app->height / 2;
+            glfwSetCursorPos(window, x, y);
+            app->xPos = x;
+            app->yPos = y;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
         
@@ -147,6 +162,8 @@ App::App()
     glfwSetCursorPosCallback(window, cursor_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void App::run()
@@ -158,6 +175,10 @@ void App::run()
     TransformationTranslate* transformation2 = new TransformationTranslate(glm::vec3(-2.0f, 0.0f, 0.0f));
     TransformationTranslate* transformation3 = new TransformationTranslate(glm::vec3(0.0f, 0.0f, 2.0f));
     TransformationTranslate* transformation4 = new TransformationTranslate(glm::vec3(0.0f, 0.0f, -2.0f));
+    TransformationRotate* transformation5 = new TransformationRotate(glm::radians(45.0f),glm::vec3(0.0f, 1.0f, 0.0f));
+    TransformationComposite* transformation6 = new TransformationComposite();
+    transformation6->AddTransformation(transformation4);
+    transformation6->AddTransformation(transformation5);
 
     //Create shader program
     
@@ -171,10 +192,10 @@ void App::run()
 
     //Create scene
     Scene* scene = new Scene();
-    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix, transformation1));
+    scene->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), shaderWithoutMatrix, transformation6));
+    scene->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), shaderWithoutMatrix, transformation1));
     scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix, transformation2));
     scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix, transformation3));
-    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix, transformation4));
     //scene->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), shaderWithoutMatrix, transformation));
 
     /*

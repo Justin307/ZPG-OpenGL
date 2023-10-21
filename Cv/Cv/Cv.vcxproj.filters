@@ -9,9 +9,11 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Models">
+      <UniqueIdentifier>{16a1c2b6-c9f6-402d-8d81-96bc3f5ca179}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{570506f5-ae2b-4451-a60c-f77b99690ef9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -86,27 +88,40 @@
     <ClInclude Include="DrawableObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="models\sphere.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="models\suzi_flat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="models\plain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="models\suzi_smooth.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Observer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="models\plain.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="models\sphere.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="models\suzi_flat.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="models\suzi_smooth.h">
+      <Filter>Models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="lambert.frag" />
-    <None Include="vertex.vert" />
+    <None Include="shaders\lambert.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\vertex.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\blinn.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\constant.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\phong.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
