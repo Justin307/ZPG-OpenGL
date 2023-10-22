@@ -42,6 +42,11 @@ glm::mat4 Camera::GetProjection()
 	return glm::perspective(glm::radians(60.0f), this->widht / this->height, 0.1f, 100.0f);
 }
 
+glm::vec3 Camera::GetPosition()
+{
+	return this->eye;
+}
+
 /*
 *	https://lms.vsb.cz/pluginfile.php/2227895/mod_resource/content/1/ZPG_Prednasky_4.pdf
 *	Page 11/31

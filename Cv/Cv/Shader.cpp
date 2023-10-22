@@ -47,6 +47,7 @@ void Shader::Use()
     glUseProgram(shaderProgram);
     this->SetUniformLocationValue(std::string("projectionMatrix"), this->projectionMatrix);
     this->SetUniformLocationValue(std::string("viewMatrix"), this->viewMatrix);
+    this->SetUniformLocationValue(std::string("cameraPosition"), this->cameraPosition);
 }
 
 GLint Shader::GetUniformLocation(std::string name)
@@ -74,6 +75,24 @@ void Shader::SetUniformLocationValue(char* location, glm::mat4 matrix)
     if (uniformLocationId >= 0)
     {
         glUniformMatrix4fv(uniformLocationId, 1, GL_FALSE, &matrix[0][0]);
+    }
+}
+
+void Shader::SetUniformLocationValue(std::string location, glm::vec3 vector)
+{
+    GLint uniformLocationId = GetUniformLocation(location);
+    if (uniformLocationId >= 0)
+    {
+        glUniformMatrix4fv(uniformLocationId, 1, GL_FALSE, &vector[0]);
+    }
+}
+
+void Shader::SetUniformLocationValue(char* location, glm::vec3 vector)
+{
+    GLint uniformLocationId = GetUniformLocation(location);
+    if (uniformLocationId >= 0)
+    {
+        glUniformMatrix4fv(uniformLocationId, 1, GL_FALSE, &vector[0]);
     }
 }
 
@@ -116,4 +135,5 @@ void Shader::Update()
 {
     this->viewMatrix = this->camera->GetView();
     this->projectionMatrix = this->camera->GetProjection();
+    this->cameraPosition = this->camera->GetPosition();
 }

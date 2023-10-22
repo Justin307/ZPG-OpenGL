@@ -23,6 +23,7 @@ private:
 	Camera* camera = nullptr;;
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
 	glm::mat4 projectionMatrix = glm::mat4(1.0f);;
+	glm::vec3 cameraPosition = glm::vec3(0);
 public:
 	static Shader* LoadFromFile(std::string vertex, std::string fragment);
 	static Shader* LoadFromFile(const char* vertex, const char* fragment);
@@ -33,6 +34,8 @@ public:
 	GLint GetUniformLocation(char* name);
 	void SetUniformLocationValue(std::string location, glm::mat4 matrix);
 	void SetUniformLocationValue(char* location, glm::mat4 matrix);
+	void SetUniformLocationValue(std::string location, glm::vec3 vector);
+	void SetUniformLocationValue(char* location, glm::vec3 vector);
 	void CheckShader();
 	void Update();
 };

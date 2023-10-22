@@ -182,21 +182,38 @@ void App::run()
 
     //Create shader program
     
-    Shader* shaderWithoutMatrix = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\lambert.frag"));
-    shaderWithoutMatrix->CheckShader();
+    Shader* constant = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\constant.frag"));
+    Shader* lambert = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\lambert.frag"));
+    Shader* phong = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\phong.frag"));
+    constant->CheckShader();
+    lambert->CheckShader();
+    phong->CheckShader();
 
     this->camera = new Camera();
-    camera->AttachObserver(shaderWithoutMatrix);
+    camera->AttachObserver(constant);
+    camera->AttachObserver(lambert);
+    camera->AttachObserver(phong);
 
-    shaderWithoutMatrix->SetCamera(camera);
+    constant->SetCamera(camera);
+    lambert->SetCamera(camera);
+    phong->SetCamera(camera);
 
-    //Create scene
-    Scene* scene = new Scene();
-    scene->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), shaderWithoutMatrix, transformation6));
-    scene->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), shaderWithoutMatrix, transformation1));
-    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix, transformation2));
-    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), shaderWithoutMatrix, transformation3));
-    //scene->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), shaderWithoutMatrix, transformation));
+    //Scene 1
+    Scene* scene1 = new Scene();
+    scene1->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, transformation2));
+
+    //Scene 2
+    Scene* scene2 = new Scene();
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), constant, transformation1));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, transformation2));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, transformation6));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), constant, transformation3));
+    
+    //Scene 3
+    Scene* scene3 = new Scene();
+    scene3->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), constant, transformation1));
+    scene3->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), lambert, transformation2));
+    scene3->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), phong, transformation6));
 
     /*
     *   https://learnopengl.com/Advanced-OpenGL/Face-culling
@@ -211,7 +228,7 @@ void App::run()
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // render scene
-        scene->Render();
+        scene3->Render();
         // update other events like input handling
         glfwPollEvents();
         // put the stuff we’ve been drawing onto the display

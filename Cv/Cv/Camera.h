@@ -20,6 +20,7 @@ public:
     Camera();
     glm::mat4 GetView();
     glm::mat4 GetProjection();
+    glm::vec3 GetPosition();
     void MoveFront();
     void MoveBack();
     void MoveLeft();
