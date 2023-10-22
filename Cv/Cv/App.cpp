@@ -212,8 +212,8 @@ void App::run()
     //Scene 3
     Scene* scene3 = new Scene();
     scene3->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), constant, transformation1));
-    scene3->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), lambert, transformation2));
-    scene3->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), phong, transformation6));
+    scene3->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), lambert, transformation2));
+    scene3->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), phong, transformation6));
 
     /*
     *   https://learnopengl.com/Advanced-OpenGL/Face-culling
@@ -228,7 +228,7 @@ void App::run()
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // render scene
-        scene3->Render();
+        scene2->Render();
         // update other events like input handling
         glfwPollEvents();
         // put the stuff we’ve been drawing onto the display

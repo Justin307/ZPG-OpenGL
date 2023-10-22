@@ -1,7 +1,7 @@
 #version 330
 
 in vec4 worldPos;
-in vec3 worldNor;
+in vec3 worldNorm;
 in vec3 color;
 in vec3 cameraPos;
 
@@ -20,12 +20,10 @@ void main ()
 
 	vec4 ambient = vec4(0.1, 0.1, 0.1, 1.0);
 
-	//Using color instead of worldNor
-	float diff = max(dot(normalize(lightDir), normalize(color)),0.0);
+	float diff = max(dot(normalize(lightDir), normalize(worldNorm)),0.0);
     vec4 diffuse = diff * vec4(0.385 ,0.647 ,0.812 ,1.0);
 
-	//Using color instead of worldNor
-	vec3 reflectDir = reflect ( - lightDir , color );
+	vec3 reflectDir = reflect ( - lightDir , worldNorm );
 
 	float spec = pow ( max ( dot ( viewDir , reflectDir ) , 0.0) , 32);
 	vec4 specular = specularStrength * spec * lightColor;
