@@ -177,6 +177,7 @@ void App::run()
     TransformationTranslate* transformation4 = new TransformationTranslate(glm::vec3(0.0f, 0.0f, -2.0f));
     TransformationRotate* transformation5 = new TransformationRotate(glm::radians(45.0f),glm::vec3(0.0f, 1.0f, 0.0f));
     TransformationComposite* transformation6 = new TransformationComposite();
+    TransformationTranslate* transformation7 = new TransformationTranslate(glm::vec3(-4.0f, 0.0f, -4.0f));
     transformation6->AddTransformation(transformation4);
     transformation6->AddTransformation(transformation5);
 
@@ -185,18 +186,22 @@ void App::run()
     Shader* constant = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\constant.frag"));
     Shader* lambert = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\lambert.frag"));
     Shader* phong = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\phong.frag"));
+    Shader* blinn = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\blinn.frag"));
     constant->CheckShader();
     lambert->CheckShader();
     phong->CheckShader();
+    blinn->CheckShader();
 
     this->camera = new Camera();
     camera->AttachObserver(constant);
     camera->AttachObserver(lambert);
     camera->AttachObserver(phong);
+    camera->AttachObserver(blinn);
 
     constant->SetCamera(camera);
     lambert->SetCamera(camera);
     phong->SetCamera(camera);
+    blinn->SetCamera(camera);
 
     //Scene 1
     Scene* scene1 = new Scene();
@@ -204,16 +209,17 @@ void App::run()
 
     //Scene 2
     Scene* scene2 = new Scene();
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), constant, transformation1));
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, transformation2));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, transformation1));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, transformation2));
     scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, transformation6));
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), constant, transformation3));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), blinn, transformation3));
     
     //Scene 3
     Scene* scene3 = new Scene();
     scene3->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), constant, transformation1));
     scene3->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), lambert, transformation2));
     scene3->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), phong, transformation6));
+    scene3->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), blinn, transformation7));
 
     /*
     *   https://learnopengl.com/Advanced-OpenGL/Face-culling
@@ -228,7 +234,7 @@ void App::run()
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // render scene
-        scene2->Render();
+        scene3->Render();
         // update other events like input handling
         glfwPollEvents();
         // put the stuff we’ve been drawing onto the display
