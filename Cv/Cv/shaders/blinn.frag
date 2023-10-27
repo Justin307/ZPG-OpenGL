@@ -27,9 +27,12 @@ void main ()
 
 	vec3 reflectDir = reflect ( - lightDir , worldNorm );
 
-	float spec = pow ( max ( dot ( halfwayDir , normalize(worldNorm) ) , 0.0) , 32);
+	float spec;
 	if(diff == 0)
 		spec = 0;
+	else
+		spec = pow ( max ( dot ( halfwayDir , normalize(worldNorm) ) , 0.0) , 32);
+	
 	vec4 specular = specularStrength * spec * lightColor;
 
 	vec4 objectColor = vec4 (0.385 ,0.647 ,0.812 ,1.0);
