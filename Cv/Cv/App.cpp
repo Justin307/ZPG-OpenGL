@@ -212,7 +212,7 @@ void App::run()
     scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, transformation1));
     scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, transformation2));
     scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, transformation6));
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), blinn, transformation3));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, transformation3));
     
     //Scene 3
     Scene* scene3 = new Scene();
@@ -234,7 +234,7 @@ void App::run()
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // render scene
-        scene3->Render();
+        scene2->Render();
         // update other events like input handling
         glfwPollEvents();
         // put the stuff we’ve been drawing onto the display

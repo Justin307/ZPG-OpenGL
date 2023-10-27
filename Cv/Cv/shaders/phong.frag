@@ -21,16 +21,21 @@ void main ()
 	vec4 ambient = vec4(0.1, 0.1, 0.1, 1.0);
 
 	float diff = max(dot(normalize(lightDir), normalize(worldNorm)),0.0);
-    vec4 diffuse = diff * vec4(0.385 ,0.647 ,0.812 ,1.0);
+    vec4 diffuse = diff * lightColor;
 
 	vec3 reflectDir = reflect ( - normalize(lightDir) , normalize(worldNorm) );
 
-	float spec = pow ( max ( dot ( normalize(viewDir) , normalize(reflectDir) ) , 0.0) , 32);
+	float spec;
+
 	if(diff == 0)
 		spec = 0;
+	else
+		spec = pow ( max ( dot ( normalize(viewDir) , normalize(reflectDir) ) , 0.0) , 64);
+	
+
 	vec4 specular = specularStrength * spec * lightColor;
 
-	vec4 objectColor = vec4 (0.385 ,0.647 ,0.812 ,1.0);
+	vec4 objectColor = vec4(0.5,0.5,0.5, 1);
 
 	frag_colour =( ambient + diffuse + specular )* objectColor ;
 }

@@ -21,9 +21,6 @@ private:
 	GLuint fragmentShader;
 	GLuint shaderProgram;
 	Camera* camera = nullptr;;
-	glm::mat4 viewMatrix = glm::mat4(1.0f);
-	glm::mat4 projectionMatrix = glm::mat4(1.0f);;
-	glm::vec3 cameraPosition = glm::vec3(0);
 public:
 	static Shader* LoadFromFile(std::string vertex, std::string fragment);
 	static Shader* LoadFromFile(const char* vertex, const char* fragment);
