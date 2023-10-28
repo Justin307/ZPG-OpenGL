@@ -6,8 +6,8 @@
 class TransformationScale : public TransformationComponent
 {
 private:
-	glm::vec3 value;
 public:
+	glm::vec3 value;
 	TransformationScale(glm::vec3 value);
 	void ApplyTransformation(glm::mat4& matrix) override;
 };

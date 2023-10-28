@@ -6,9 +6,9 @@
 class TransformationRotate : public TransformationComponent
 {
 private:
+public:
 	float angle;
 	glm::vec3 value;
-public:
 	TransformationRotate(float angle, glm::vec3 value);
 	void ApplyTransformation(glm::mat4& matrix) override;
 };
