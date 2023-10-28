@@ -23,6 +23,7 @@
 #include "TransformationTranslate.h"
 #include "Scene.h"
 #include "Camera.h"
+#include "Light.h"
 
 //Include models
 #include "models/sphere.h"
@@ -198,6 +199,12 @@ void App::run()
     camera->AttachObserver(phong);
     camera->AttachObserver(blinn);
     camera->NotifyObservers();
+
+    PositionedLight* light = new PositionedLight(glm::vec4(0.75f, 0.75f, 0.75f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    light->AttachObserver(lambert);
+    light->AttachObserver(phong);
+    light->AttachObserver(blinn);
+    light->NotifyObservers();
 
     //Scene 1
     Scene* scene1 = new Scene();

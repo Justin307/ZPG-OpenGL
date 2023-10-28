@@ -2,7 +2,7 @@
 
 enum ObserverAction
 {
-	LIGHT,
+	POS_LIGHT,
 	CAMERA
 };
 

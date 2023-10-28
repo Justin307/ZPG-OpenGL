@@ -32,6 +32,10 @@ public:
 	void SetUniformLocationValue(char* location, glm::mat4 matrix);
 	void SetUniformLocationValue(std::string location, glm::vec3 vector);
 	void SetUniformLocationValue(char* location, glm::vec3 vector);
+	void SetUniformLocationValue(std::string location, glm::vec4 vector);
+	void SetUniformLocationValue(char* location, glm::vec4 vector);
+	void SetUniformLocationValue(std::string location, int value);
+	void SetUniformLocationValue(char* location, int value);
 	void CheckShader();
 	void Update(ObserverAction action, void* object);
 };

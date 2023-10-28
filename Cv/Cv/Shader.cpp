@@ -1,5 +1,6 @@
 #include "Shader.h"
 #include "Camera.h"
+#include "Light.h"
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -94,6 +95,42 @@ void Shader::SetUniformLocationValue(char* location, glm::vec3 vector)
     }
 }
 
+void Shader::SetUniformLocationValue(std::string location, glm::vec4 vector)
+{
+    GLint uniformLocationId = GetUniformLocation(location);
+    if (uniformLocationId >= 0)
+    {
+        glProgramUniform4f(shaderProgram, uniformLocationId, vector.x, vector.y, vector.z, vector.w);
+    }
+}
+
+void Shader::SetUniformLocationValue(char* location, glm::vec4 vector)
+{
+    GLint uniformLocationId = GetUniformLocation(location);
+    if (uniformLocationId >= 0)
+    {
+        glProgramUniform4f(shaderProgram, uniformLocationId, vector.x, vector.y, vector.z, vector.w);
+    }
+}
+
+void Shader::SetUniformLocationValue(std::string location, int value)
+{
+    GLint uniformLocationId = GetUniformLocation(location);
+    if (uniformLocationId >= 0)
+    {
+        glProgramUniform1i(shaderProgram, uniformLocationId, value);
+    }
+}
+
+void Shader::SetUniformLocationValue(char* location, int value)
+{
+    GLint uniformLocationId = GetUniformLocation(location);
+    if (uniformLocationId >= 0)
+    {
+        glProgramUniform1i(shaderProgram, uniformLocationId, value);
+    }
+}
+
 void Shader::CheckShader()
 {
     GLint status;
@@ -140,9 +177,13 @@ void Shader::Update(ObserverAction action, void* object)
         this->SetUniformLocationValue(std::string("viewMatrix"), camera->GetView()); 
         break;
     }
-    case LIGHT:
+    case POS_LIGHT:
     {
-
+        LightData data = static_cast<PositionedLight*>(object)->GetData();
+        this->SetUniformLocationValue(std::string("light.type"), data.type);
+        glm::vec4 color = data.color;
+        this->SetUniformLocationValue(std::string("light.color"), color);
+        this->SetUniformLocationValue(std::string("light.position"), data.position);
         break;
     }
     default:
