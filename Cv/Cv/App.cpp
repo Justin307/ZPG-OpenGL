@@ -197,11 +197,7 @@ void App::run()
     camera->AttachObserver(lambert);
     camera->AttachObserver(phong);
     camera->AttachObserver(blinn);
-
-    constant->SetCamera(camera);
-    lambert->SetCamera(camera);
-    phong->SetCamera(camera);
-    blinn->SetCamera(camera);
+    camera->NotifyObservers();
 
     //Scene 1
     Scene* scene1 = new Scene();

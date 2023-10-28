@@ -20,12 +20,10 @@ private:
 	GLuint vertexShader;
 	GLuint fragmentShader;
 	GLuint shaderProgram;
-	Camera* camera = nullptr;;
 public:
 	static Shader* LoadFromFile(std::string vertex, std::string fragment);
 	static Shader* LoadFromFile(const char* vertex, const char* fragment);
 	Shader(const char* vertex_shader, const char* fragment_shader);
-	void SetCamera(Camera* camera);
 	void Use();
 	void Unuse();
 	GLint GetUniformLocation(std::string name);

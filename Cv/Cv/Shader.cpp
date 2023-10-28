@@ -38,12 +38,6 @@ Shader::Shader(const char* vertex_shader, const char* fragment_shader)
     glLinkProgram(shaderProgram);
 }
 
-void Shader::SetCamera(Camera* camera)
-{
-    this->camera = camera;
-    this->Update(CAMERA, this);
-}
-
 void Shader::Use()
 {
     glUseProgram(shaderProgram);
