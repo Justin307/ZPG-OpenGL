@@ -100,9 +100,7 @@ void App::mouse_button_callback(GLFWwindow* window, int button, int action, int 
             app->yPos = y;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
-        
-    }
-        
+    }      
 }
 
 void App::window_size_callback(GLFWwindow* window, int width, int height)
@@ -206,23 +204,25 @@ void App::run()
     light->AttachObserver(blinn);
     light->NotifyObservers();
 
+    Material* material = new Material(glm::vec3(0.0215f, 0.1745f, 0.0215),glm::vec3(0.07568, 0.61424, 0.07568), glm::vec3(0.633, 0.727811, 0.633), 32);
+    
     //Scene 1
     Scene* scene1 = new Scene();
-    scene1->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, transformation2));
+    scene1->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, material, transformation2));
 
     //Scene 2
     Scene* scene2 = new Scene();
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, transformation1));
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, transformation2));
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, transformation6));
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, transformation3));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, material, transformation1));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, material, transformation2));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, material, transformation6));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, material, transformation3));
     
     //Scene 3
     Scene* scene3 = new Scene();
-    scene3->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), constant, transformation1));
-    scene3->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), lambert, transformation2));
-    scene3->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), phong, transformation6));
-    scene3->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), blinn, transformation7));
+    scene3->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), constant, material, transformation1));
+    scene3->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), lambert, material, transformation2));
+    scene3->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), phong, material, transformation6));
+    scene3->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), blinn, material, transformation7));
 
     /*
     *   https://learnopengl.com/Advanced-OpenGL/Face-culling

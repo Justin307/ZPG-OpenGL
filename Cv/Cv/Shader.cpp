@@ -131,6 +131,24 @@ void Shader::SetUniformLocationValue(char* location, int value)
     }
 }
 
+void Shader::SetUniformLocationValue(std::string location, float value)
+{
+    GLint uniformLocationId = GetUniformLocation(location);
+    if (uniformLocationId >= 0)
+    {
+        glProgramUniform1f(shaderProgram, uniformLocationId, value);
+    }
+}
+
+void Shader::SetUniformLocationValue(char* location, float value)
+{
+    GLint uniformLocationId = GetUniformLocation(location);
+    if (uniformLocationId >= 0)
+    {
+        glProgramUniform1f(shaderProgram, uniformLocationId, value);
+    }
+}
+
 void Shader::CheckShader()
 {
     GLint status;
