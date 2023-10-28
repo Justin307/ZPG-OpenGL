@@ -27,6 +27,14 @@ out vec4 frag_colour;
 
 void main () 
 {
+	float constant = 1.0;
+    float linear = 0.09;
+    float quadratic = 0.032;
+
+	float distance = length(light.position - vec3(worldPos));
+
+	float attenuation = 1.0 / (constant + linear * distance + quadratic * distance * distance);
+
 	vec3 lightDir = normalize(light.position - vec3(worldPos));
 
 	vec3 viewDir = normalize(cameraPos - vec3(worldPos));
@@ -36,13 +44,13 @@ void main ()
 	vec4 ambient = light.color * vec4(material.ambient, 1.0f);
 
 	float diff = max(dot(lightDir, normalize(worldNorm)),0.0);
-    vec4 diffuse = (diff * vec4(material.diffuse,1.0f)) * light.color;
+    vec4 diffuse = (diff * vec4(material.diffuse,1.0f)) * light.color * attenuation;
 
 	vec3 reflectDir = reflect ( - lightDir , worldNorm );
 
 	float spec = pow ( max ( dot ( halfwayDir , normalize(worldNorm) ) , 0.0) , material.shininess);
 	
-	vec4 specular = (spec * vec4(material.specular,1.0f)) * light.color;
+	vec4 specular = (spec * vec4(material.specular,1.0f)) * light.color * attenuation;
 ;
 
 	frag_colour = ambient + diffuse + specular ;

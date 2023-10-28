@@ -26,9 +26,17 @@ out vec4 frag_colour;
 
 void main () 
 {
-   vec3 lightDir = light.position - vec3(worldPos);
-   float diff = max(dot(normalize(lightDir), normalize(worldNorm)),0.0);
-   vec4 diffuse = (diff * vec4(material.diffuse,1.0f)) * light.color;
-   vec4 ambient = light.color * vec4(material.ambient, 1.0f);
-   frag_colour = ambient + diffuse;
+	float constant = 1.0;
+    float linear = 0.09;
+    float quadratic = 0.032;
+
+	float distance = length(light.position - vec3(worldPos));
+
+	float attenuation = 1.0 / (constant + linear * distance + quadratic * distance * distance);
+
+	vec3 lightDir = light.position - vec3(worldPos);
+	float diff = max(dot(normalize(lightDir), normalize(worldNorm)),0.0);
+	vec4 diffuse = (diff * vec4(material.diffuse,1.0f)) * light.color * attenuation;
+	vec4 ambient = light.color * vec4(material.ambient, 1.0f);
+	frag_colour = ambient + diffuse;
 }

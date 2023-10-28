@@ -198,7 +198,7 @@ void App::run()
     camera->AttachObserver(blinn);
     camera->NotifyObservers();
 
-    PositionedLight* light = new PositionedLight(glm::vec4(0.75f, 0.75f, 0.75f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    PositionedLight* light = new PositionedLight(glm::vec4(0.75f, 0.75f, 0.75f, 1.0f), glm::vec3(0.0f, -25.0f, 0.0f));
     light->AttachObserver(lambert);
     light->AttachObserver(phong);
     light->AttachObserver(blinn);
@@ -212,10 +212,10 @@ void App::run()
 
     //Scene 2
     Scene* scene2 = new Scene();
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, material, transformation1));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), constant, material, transformation1));
     scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, material, transformation2));
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, material, transformation6));
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, material, transformation3));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, material, transformation6));
+    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), blinn, material, transformation3));
     
     //Scene 3
     Scene* scene3 = new Scene();
@@ -228,6 +228,8 @@ void App::run()
     *   https://learnopengl.com/Advanced-OpenGL/Face-culling
     */
 
+    glm::vec3 position(0.0f, -25.0f, 0.0f);
+
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     camera->MoveBack();
@@ -238,6 +240,8 @@ void App::run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // render scene
         scene2->Render();
+        position.y += 0.05;
+        light->SetPosition(position);
         // update other events like input handling
         glfwPollEvents();
         // put the stuff we’ve been drawing onto the display
