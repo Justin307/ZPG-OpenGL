@@ -1,11 +1,11 @@
 #pragma once
 #include <glm/ext/matrix_float4x4.hpp>
 #include <vector>
-#include "Observer.h"
+#include "Observable.h"
 
 class Shader;
 
-class Camera {
+class Camera : public Observable{
 private:
     glm::vec3 eye;
     glm::vec3 center;
@@ -14,8 +14,6 @@ private:
     float fi;
     float widht;
     float height;
-    std::vector<Observer*> observers;
-    void NotifyObservers();
 public:
     Camera();
     glm::mat4 GetView();
@@ -28,7 +26,6 @@ public:
     void MoveUp();
     void MoveDown();
     void MoveMouse(float x, float y);
-    void AttachObserver(Observer* observer);
-    void DettachObserver(Observer* observer);
     void SetWidthHeight(float width, float height);
+    void NotifyObservers();
 };

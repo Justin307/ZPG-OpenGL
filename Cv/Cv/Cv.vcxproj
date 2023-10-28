@@ -24,6 +24,7 @@
     <ClCompile Include="DrawableObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Observable.cpp" />
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="models\sphere.h" />
     <ClInclude Include="models\suzi_flat.h" />
     <ClInclude Include="models\suzi_smooth.h" />
+    <ClInclude Include="Observable.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />

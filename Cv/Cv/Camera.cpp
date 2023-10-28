@@ -14,12 +14,6 @@
 /*
 *	https://youtu.be/AWM4CUfffos?si=hKDdLWjiXjY9RI-K
 */
-void Camera::NotifyObservers()
-{
-	for (auto& x : this->observers)
-		x->Update();
-}
-
 Camera::Camera()
 {
 	this->eye = { 0.0f, 0.0f, 0.0f };
@@ -106,19 +100,17 @@ void Camera::MoveMouse(float x, float y)
 	this->NotifyObservers();
 }
 
-void Camera::AttachObserver(Observer* observer)
-{
-	this->observers.push_back(observer);
-}
-
-void Camera::DettachObserver(Observer* observer)
-{
-	observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
-}
-
 void Camera::SetWidthHeight(float width, float height)
 {
 	this->widht = width;
 	this->height = height;
 	this->NotifyObservers();
+}
+
+void Camera::NotifyObservers()
+{
+	for (auto o : observers)
+	{
+		o->Update();
+	}
 }
