@@ -41,7 +41,7 @@ Shader::Shader(const char* vertex_shader, const char* fragment_shader)
 void Shader::SetCamera(Camera* camera)
 {
     this->camera = camera;
-    this->Update();
+    this->Update(CAMERA, this);
 }
 
 void Shader::Use()
@@ -130,8 +130,25 @@ void Shader::CheckShader()
     }
 }
 
-void Shader::Update()
+void Shader::Update(ObserverAction action, void* object)
 {
-    this->SetUniformLocationValue(std::string("projectionMatrix"), this->camera->GetProjection());
-    this->SetUniformLocationValue(std::string("viewMatrix"), this->camera->GetView());
+    switch (action)
+    {
+    case CAMERA:
+    {
+        Camera* camera = static_cast<Camera*>(object);
+        this->SetUniformLocationValue(std::string("projectionMatrix"), camera->GetProjection());
+        this->SetUniformLocationValue(std::string("viewMatrix"), camera->GetView()); 
+        break;
+    }
+    case LIGHT:
+    {
+
+        break;
+    }
+    default:
+    {
+        break;
+    }    
+    }
 }

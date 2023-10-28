@@ -111,6 +111,6 @@ void Camera::NotifyObservers()
 {
 	for (auto o : observers)
 	{
-		o->Update();
+		o->Update(CAMERA, this);
 	}
 }

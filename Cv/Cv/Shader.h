@@ -34,6 +34,6 @@ public:
 	void SetUniformLocationValue(std::string location, glm::vec3 vector);
 	void SetUniformLocationValue(char* location, glm::vec3 vector);
 	void CheckShader();
-	void Update();
+	void Update(ObserverAction action, void* object);
 };
 
