@@ -27,6 +27,7 @@ public:
 	Shader(const char* vertex_shader, const char* fragment_shader);
 	void SetCamera(Camera* camera);
 	void Use();
+	void Unuse();
 	GLint GetUniformLocation(std::string name);
 	GLint GetUniformLocation(char* name);
 	void SetUniformLocationValue(std::string location, glm::mat4 matrix);

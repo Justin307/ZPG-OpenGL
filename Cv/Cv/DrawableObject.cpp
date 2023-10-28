@@ -24,5 +24,6 @@ void DrawableObject::Render()
 	}
 	shader->SetUniformLocationValue(id, matrix);
 	model->Render();
+	shader->Unuse();
 }
 
