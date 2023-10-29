@@ -213,7 +213,7 @@ void App::run()
     
     Scene* scene = new Scene();
 
-#define SCENE 2
+#define SCENE 1
 
 #if SCENE == 1
     //Phong's four balls
@@ -315,10 +315,11 @@ void App::run()
     light->AttachObserver(phongwrong);
     TransformationTranslate* transformation1 = new TransformationTranslate(glm::vec3(2.0f, 0.0f, 0.0f));
     TransformationTranslate* transformation2 = new TransformationTranslate(glm::vec3(-2.0f, 0.0f, 0.0f));
-    material->shininess = 1;
+    emerald->shininess = 1;
     scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, emerald, transformation1));
     scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phongwrong, emerald, transformation2));
 #elif SCENE == 4
+    //Projection matrix testing
     TransformationTranslate* transformation1 = new TransformationTranslate(glm::vec3(6.0f, 0.0f, 0.0f));
     TransformationTranslate* transformation2 = new TransformationTranslate(glm::vec3(-4.0f, 0.0f, 0.0f));
     TransformationTranslate* transformation3 = new TransformationTranslate(glm::vec3(2.0f, -2.0f, 0.0f));
