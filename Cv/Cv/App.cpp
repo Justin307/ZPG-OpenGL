@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 
 //Include my headers
 #include "Shader.h"
@@ -25,10 +27,15 @@
 #include "Camera.h"
 #include "Light.h"
 
+
 //Include models
 #include "models/sphere.h"
 #include "models/suzi_flat.h"
 #include "models/suzi_smooth.h"
+#include "models/gift.h"
+#include "models/tree.h"
+#include "models/bushes.h"
+#include "models/plain.h"
 
 void App::error_callback(int error, const char* description) { fputs(description, stderr); }
 
@@ -163,22 +170,15 @@ App::App()
     glfwSetWindowSizeCallback(window, window_size_callback);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
 }
 
 void App::run()
 {
     //GLEW
     printGLEWInfo();
-
-    TransformationTranslate* transformation1 = new TransformationTranslate(glm::vec3(2.0f, 0.0f, 0.0f));
-    TransformationTranslate* transformation2 = new TransformationTranslate(glm::vec3(-2.0f, 0.0f, 0.0f));
-    TransformationTranslate* transformation3 = new TransformationTranslate(glm::vec3(0.0f, 0.0f, 2.0f));
-    TransformationTranslate* transformation4 = new TransformationTranslate(glm::vec3(0.0f, 0.0f, -2.0f));
-    TransformationRotate* transformation5 = new TransformationRotate(glm::radians(45.0f),glm::vec3(0.0f, 1.0f, 0.0f));
-    TransformationComposite* transformation6 = new TransformationComposite();
-    TransformationTranslate* transformation7 = new TransformationTranslate(glm::vec3(-4.0f, 0.0f, -4.0f));
-    transformation6->AddTransformation(transformation4);
-    transformation6->AddTransformation(transformation5);
 
     //Create shader program
     
@@ -198,50 +198,132 @@ void App::run()
     camera->AttachObserver(blinn);
     camera->NotifyObservers();
 
-    PositionedLight* light = new PositionedLight(glm::vec4(0.75f, 0.75f, 0.75f, 1.0f), glm::vec3(0.0f, -25.0f, 0.0f));
+    PositionedLight* light = new PositionedLight(glm::vec4(0.75f, 0.75f, 0.75f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     light->AttachObserver(lambert);
     light->AttachObserver(phong);
     light->AttachObserver(blinn);
     light->NotifyObservers();
 
-    Material* material = new Material(glm::vec3(0.0215f, 0.1745f, 0.0215),glm::vec3(0.07568, 0.61424, 0.07568), glm::vec3(0.633, 0.727811, 0.633), 32);
+    Material* emerald = new Material(glm::vec3(0.0215, 0.1745, 0.0215),glm::vec3(0.07568, 0.61424, 0.07568), glm::vec3(0.633, 0.727811, 0.633), 32);
+    Material* ruby = new Material(glm::vec3(0.1745, 0.01175, 0.01175),glm::vec3(0.61424, 0.04136, 0.04136), glm::vec3(0.727811, 0.626959, 0.626959), 32);
+    Material* bronze = new Material(glm::vec3(0.2125, 0.1275, 0.054),glm::vec3(0.714, 0.4284, 0.18144), glm::vec3(0.393548, 0.271906, 0.166721), 8);
+    Material* silver = new Material(glm::vec3(0.19225, 0.19225, 0.19225),glm::vec3(0.50754, 0.50754, 0.50754), glm::vec3(0.508273, 0.508273, 0.508273), 16);
+    Material* brass = new Material(glm::vec3(0.329412, 0.223529, 0.027451),glm::vec3(0.780392, 0.568627, 0.113725), glm::vec3(0.992157, 0.941176, 0.807843), 8);
     
-    //Scene 1
-    Scene* scene1 = new Scene();
-    scene1->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, material, transformation2));
+    Scene* scene = new Scene();
 
-    //Scene 2
-    Scene* scene2 = new Scene();
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), constant, material, transformation1));
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, material, transformation2));
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, material, transformation6));
-    scene2->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), blinn, material, transformation3));
-    
-    //Scene 3
-    Scene* scene3 = new Scene();
-    scene3->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), constant, material, transformation1));
-    scene3->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), lambert, material, transformation2));
-    scene3->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), phong, material, transformation6));
-    scene3->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), blinn, material, transformation7));
+#define SCENE 5
 
-    /*
-    *   https://learnopengl.com/Advanced-OpenGL/Face-culling
-    */
-
-    glm::vec3 position(0.0f, -25.0f, 0.0f);
-
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    camera->MoveBack();
-    camera->MoveBack();
+#if SCENE == 1
+    //Phong's four balls
+    TransformationTranslate* transformation1 = new TransformationTranslate(glm::vec3(2.0f, 0.0f, 0.0f));
+    TransformationTranslate* transformation2 = new TransformationTranslate(glm::vec3(-2.0f, 0.0f, 0.0f));
+    TransformationTranslate* transformation3 = new TransformationTranslate(glm::vec3(0.0f, 0.0f, 2.0f));
+    TransformationTranslate* transformation4 = new TransformationTranslate(glm::vec3(0.0f, 0.0f, -2.0f));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, emerald, transformation1));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, emerald, transformation2));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, emerald, transformation3));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, emerald, transformation4));
+#elif SCENE == 2
+    //Solar system
+#elif SCENE == 3 
+    //Phong's light trimming
+    Shader* phongwrong = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\phongwrong.frag"));
+    camera->AttachObserver(phongwrong);
+    light->AttachObserver(phongwrong);
+    TransformationTranslate* transformation1 = new TransformationTranslate(glm::vec3(2.0f, 0.0f, 0.0f));
+    TransformationTranslate* transformation2 = new TransformationTranslate(glm::vec3(-2.0f, 0.0f, 0.0f));
+    material->shininess = 1;
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, emerald, transformation1));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phongwrong, emerald, transformation2));
+#elif SCENE == 4
+    TransformationTranslate* transformation1 = new TransformationTranslate(glm::vec3(6.0f, 0.0f, 0.0f));
+    TransformationTranslate* transformation2 = new TransformationTranslate(glm::vec3(-4.0f, 0.0f, 0.0f));
+    TransformationTranslate* transformation3 = new TransformationTranslate(glm::vec3(2.0f, -2.0f, 0.0f));
+    TransformationTranslate* transformation4 = new TransformationTranslate(glm::vec3(-2.0f, 0.0f, 0.0f));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, emerald, transformation1));
+    scene->AddModel(new DrawableObject(new Model(gift, sizeof(gift)), lambert, emerald, transformation2));
+    scene->AddModel(new DrawableObject(new Model(tree, sizeof(tree)), lambert, emerald, transformation3));
+    scene->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), lambert, emerald, transformation4));
+    light->SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
+#elif SCENE == 5
+    //Forest
+    light->SetPosition(glm::vec3(0.0f, 0.25f, 0.0f));
+    TransformationScale* planeScale = new TransformationScale(glm::vec3(50.0f, 1.0f, 50.0f));
+    TransformationTranslate* planeTranslate = new TransformationTranslate(glm::vec3(0.0f, -1.0f, 0.0f));
+    TransformationComposite* planeTransformations = new TransformationComposite();
+    planeTransformations->AddTransformation(planeScale);
+    planeTransformations->AddTransformation(planeTranslate);
+    scene->AddModel(new DrawableObject(new Model(plain, sizeof(plain)), lambert, emerald, planeTransformations));
+    TransformationComposite* bushesTransformation = new TransformationComposite();
+    bushesTransformation->AddTransformation(new TransformationTranslate(glm::vec3(0.0f, -1.0f, 0.0f)));
+    bushesTransformation->AddTransformation(new TransformationRotate(glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    scene->AddModel(new DrawableObject(new Model(bushes, sizeof(bushes)), lambert, ruby, bushesTransformation));
+    bushesTransformation = new TransformationComposite();
+    bushesTransformation->AddTransformation(new TransformationTranslate(glm::vec3(0.0f, -1.0f, 0.0f)));
+    bushesTransformation->AddTransformation(new TransformationRotate(glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    scene->AddModel(new DrawableObject(new Model(bushes, sizeof(bushes)), lambert, bronze, bushesTransformation));
+    bushesTransformation = new TransformationComposite();
+    bushesTransformation->AddTransformation(new TransformationTranslate(glm::vec3(0.0f, -1.0f, 0.0f)));
+    bushesTransformation->AddTransformation(new TransformationRotate(glm::radians(240.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    scene->AddModel(new DrawableObject(new Model(bushes, sizeof(bushes)), lambert, brass, bushesTransformation));
+    TransformationComposite* sphereTransformation = new TransformationComposite();
+    sphereTransformation->AddTransformation(new TransformationTranslate(glm::vec3(0.75f, -1.0f, 0.75f)));
+    sphereTransformation->AddTransformation(new TransformationScale(glm::vec3(0.2f, 0.2f, 0.2f)));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, silver, sphereTransformation));
+    sphereTransformation = new TransformationComposite();
+    sphereTransformation->AddTransformation(new TransformationTranslate(glm::vec3(0.75f, -1.0f, -0.75f)));
+    sphereTransformation->AddTransformation(new TransformationScale(glm::vec3(0.2f, 0.2f, 0.2f)));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), lambert, silver, sphereTransformation));
+    TransformationComposite* suziTransformation = new TransformationComposite();
+    suziTransformation->AddTransformation(new TransformationTranslate(glm::vec3(0.75f, -0.5f, 0.75f)));
+    suziTransformation->AddTransformation(new TransformationScale(glm::vec3(0.2f, 0.2f, 0.2f)));
+    suziTransformation->AddTransformation(new TransformationRotate(glm::radians(-135.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    scene->AddModel(new DrawableObject(new Model(suziSmooth, sizeof(suziSmooth)), blinn, bronze, suziTransformation));
+    suziTransformation = new TransformationComposite();
+    suziTransformation->AddTransformation(new TransformationTranslate(glm::vec3(0.75f, -0.5f, -0.75f)));
+    suziTransformation->AddTransformation(new TransformationScale(glm::vec3(0.2f, 0.2f, 0.2f)));
+    suziTransformation->AddTransformation(new TransformationRotate(glm::radians(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    scene->AddModel(new DrawableObject(new Model(suziFlat, sizeof(suziFlat)), blinn, brass, suziTransformation));
+    TransformationComposite* giftTranformation = new TransformationComposite();
+    giftTranformation->AddTransformation(new TransformationTranslate(glm::vec3(1.5f, -1.0f, 0.0f)));
+    giftTranformation->AddTransformation(new TransformationRotate(glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    scene->AddModel(new DrawableObject(new Model(gift, sizeof(gift)), phong, ruby, giftTranformation));
+    giftTranformation = new TransformationComposite();
+    giftTranformation->AddTransformation(new TransformationTranslate(glm::vec3(1.8f, -1.0f, 0.3f)));
+    giftTranformation->AddTransformation(new TransformationRotate(glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    scene->AddModel(new DrawableObject(new Model(gift, sizeof(gift)), phong, bronze, giftTranformation));
+    giftTranformation = new TransformationComposite();
+    giftTranformation->AddTransformation(new TransformationTranslate(glm::vec3(1.8f, -1.0f, -0.3f)));
+    giftTranformation->AddTransformation(new TransformationRotate(glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f))); 
+    scene->AddModel(new DrawableObject(new Model(gift, sizeof(gift)), phong, silver, giftTranformation));
+    giftTranformation = new TransformationComposite();
+    giftTranformation->AddTransformation(new TransformationTranslate(glm::vec3(2.1f, -1.0f, 0.0f)));
+    giftTranformation->AddTransformation(new TransformationRotate(glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    scene->AddModel(new DrawableObject(new Model(gift, sizeof(gift)), phong, brass, giftTranformation));
+    srand(time(nullptr));
+    Model* treeModel = new Model(tree, sizeof(tree));
+    for (int i = 0; i < 120; i++)
+    {
+        TransformationComposite* treeTransformation = new TransformationComposite();
+        float x = (static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (30)))) - 15;
+        float z = (static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (30)))) - 15;
+        if ((3.0f > x && x >= -3.0f) && (3.0f > z && z >= -3.0f))
+            continue;
+        treeTransformation->AddTransformation(new TransformationTranslate(glm::vec3(x, -1.0f, z)));
+        float scale = 0.25 + static_cast <float> (rand() / (static_cast <float> (RAND_MAX)));
+        treeTransformation->AddTransformation(new TransformationScale(glm::vec3(scale, scale, scale)));
+        float rotation = static_cast <float> (rand() / (static_cast <float> (RAND_MAX/360)));
+        treeTransformation->AddTransformation(new TransformationRotate(glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f)));
+        scene->AddModel(new DrawableObject(treeModel, lambert, emerald, treeTransformation));
+    }
+#endif
 
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // render scene
-        scene2->Render();
-        position.y += 0.05;
-        light->SetPosition(position);
+        scene->Render();
         // update other events like input handling
         glfwPollEvents();
         // put the stuff we’ve been drawing onto the display
