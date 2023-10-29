@@ -41,27 +41,27 @@ void App::error_callback(int error, const char* description) { fputs(description
 
 void App::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_W && action == GLFW_PRESS)
+    if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
         App::GetInstance()->camera->MoveFront();
     }
-    else if (key == GLFW_KEY_S && action == GLFW_PRESS)
+    else if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
         App::GetInstance()->camera->MoveBack();
     }
-    else if (key == GLFW_KEY_A && action == GLFW_PRESS)
+    else if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
         App::GetInstance()->camera->MoveLeft();
     }
-    else if (key == GLFW_KEY_D && action == GLFW_PRESS)
+    else if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
         App::GetInstance()->camera->MoveRight();
     }
-    else if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS)
+    else if (key == GLFW_KEY_LEFT_SHIFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
         App::GetInstance()->camera->MoveUp();
     }
-    else if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS)
+    else if (key == GLFW_KEY_LEFT_CONTROL && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
         App::GetInstance()->camera->MoveDown();
     }

@@ -48,37 +48,37 @@ glm::vec3 Camera::GetPosition()
 
 void Camera::MoveFront()
 {
-	eye += (glm::normalize(center));
+	eye += (glm::normalize(center)*0.1f);
 	this->NotifyObservers();
 }
 
 void Camera::MoveBack()
 {
-	eye -= (glm::normalize(center));
+	eye -= (glm::normalize(center)*0.1f);
 	this->NotifyObservers();
 }
 
 void Camera::MoveLeft()
 {
-	eye -= (glm::normalize(glm::cross(center, up)));
+	eye -= (glm::normalize(glm::cross(center, up))*0.1f);
 	this->NotifyObservers();
 }
 
 void Camera::MoveRight()
 {
-	eye += (glm::normalize(glm::cross(center, up)));
+	eye += (glm::normalize(glm::cross(center, up)) * 0.1f);
 	this->NotifyObservers();
 }
 
 void Camera::MoveUp()
 {
-	eye -= (glm::normalize(glm::cross(center,glm::cross(center, up))));
+	eye -= (glm::normalize(glm::cross(center,glm::cross(center, up))) * 0.1f);
 	this->NotifyObservers();
 }
 
 void Camera::MoveDown()
 {
-	eye += (glm::normalize(glm::cross(center, glm::cross(center, up))));
+	eye += (glm::normalize(glm::cross(center, glm::cross(center, up))) * 0.1f);
 	this->NotifyObservers();
 }
 
