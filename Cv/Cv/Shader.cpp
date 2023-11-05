@@ -197,36 +197,78 @@ void Shader::Update(ObserverAction action, void* object)
     }
     case POS_LIGHT:
     {
+        int id = -1;
+        for (int i = 0; i = this->lightPositions.size(); i++)
+        {
+            if (this->lightPositions[i] == object)
+            {
+                id = i;
+                break;
+            }
+        }
+        if (id == -1)
+        {
+            id = this->lightPositions.size();
+            this->lightPositions.push_back(object);
+        }
         LightData data = static_cast<PositionedLight*>(object)->GetData();
-        this->SetUniformLocationValue(std::string("light.type"), data.type);
-        this->SetUniformLocationValue(std::string("light.color"), data.color);
-        this->SetUniformLocationValue(std::string("light.constant"), data.constant);
-        this->SetUniformLocationValue(std::string("light.linear"), data.linear);
-        this->SetUniformLocationValue(std::string("light.quadratic"), data.quadratic);
-        this->SetUniformLocationValue(std::string("light.position"), data.position);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].type", data.type);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].color", data.color);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].constant", data.constant);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].linear", data.linear);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].quadratic", data.quadratic);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].position", data.position);
         break;
     }
     case DIR_LIGHT:
     {
+        int id = -1;
+        for (int i = 0; i = this->lightPositions.size(); i++)
+        {
+            if (this->lightPositions[i] == object)
+            {
+                id = i;
+                break;
+            }
+        }
+        if (id == -1)
+        {
+            id = this->lightPositions.size();
+            this->lightPositions.push_back(object);
+        }
         LightData data = static_cast<DirectionLight*>(object)->GetData();
-        this->SetUniformLocationValue(std::string("light.type"), data.type);
-        this->SetUniformLocationValue(std::string("light.color"), data.color);
-        this->SetUniformLocationValue(std::string("light.constant"), data.constant);
-        this->SetUniformLocationValue(std::string("light.linear"), data.linear);
-        this->SetUniformLocationValue(std::string("light.quadratic"), data.quadratic);
-        this->SetUniformLocationValue(std::string("light.direction"), data.direction);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].type", data.type);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].color", data.color);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].constant", data.constant);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].linear", data.linear);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].quadratic", data.quadratic);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].direction", data.direction);
         break;
     }
     case REF_LIGHT:
     {
+        int id = -1;
+        for (int i = 0; i = this->lightPositions.size(); i++)
+        {
+            if (this->lightPositions[i] == object)
+            {
+                id = i;
+                break;
+            }
+        }
+        if (id == -1)
+        {
+            id = this->lightPositions.size();
+            this->lightPositions.push_back(object);
+        }
         LightData data = static_cast<ReflectorLight*>(object)->GetData();
-        this->SetUniformLocationValue(std::string("light.type"), data.type);
-        this->SetUniformLocationValue(std::string("light.color"), data.color);
-        this->SetUniformLocationValue(std::string("light.constant"), data.constant);
-        this->SetUniformLocationValue(std::string("light.linear"), data.linear);
-        this->SetUniformLocationValue(std::string("light.quadratic"), data.quadratic);
-        this->SetUniformLocationValue(std::string("light.position"), data.position);
-        this->SetUniformLocationValue(std::string("light.direction"), data.direction);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].type", data.type);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].color", data.color);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].constant", data.constant);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].linear", data.linear);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].quadratic", data.quadratic);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].position", data.position);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].direction", data.direction);
         break;
     }
     default:

@@ -4,11 +4,11 @@
 #include <GL/glew.h>
 //Include GLFW
 #include <GLFW/glfw3.h> 
-
 //Include GLM
 #include <glm/matrix.hpp>
 
 #include <string>
+#include <vector>
 
 #include "Observer.h"
 
@@ -20,6 +20,7 @@ private:
 	GLuint vertexShader;
 	GLuint fragmentShader;
 	GLuint shaderProgram;
+	std::vector<void*> lightPositions;
 public:
 	static Shader* LoadFromFile(std::string vertex, std::string fragment);
 	static Shader* LoadFromFile(const char* vertex, const char* fragment);
