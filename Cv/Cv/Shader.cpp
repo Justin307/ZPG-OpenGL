@@ -198,7 +198,7 @@ void Shader::Update(ObserverAction action, void* object)
     case POS_LIGHT:
     {
         int id = -1;
-        for (int i = 0; i = this->lightPositions.size(); i++)
+        for (int i = 0; i < this->lightPositions.size(); i++)
         {
             if (this->lightPositions[i] == object)
             {
@@ -210,6 +210,7 @@ void Shader::Update(ObserverAction action, void* object)
         {
             id = this->lightPositions.size();
             this->lightPositions.push_back(object);
+            this->SetUniformLocationValue("lightNumber", (int)this->lightPositions.size());
         }
         LightData data = static_cast<PositionedLight*>(object)->GetData();
         this->SetUniformLocationValue("light[" + std::to_string(id) + "].type", data.type);
@@ -223,7 +224,7 @@ void Shader::Update(ObserverAction action, void* object)
     case DIR_LIGHT:
     {
         int id = -1;
-        for (int i = 0; i = this->lightPositions.size(); i++)
+        for (int i = 0; i < this->lightPositions.size(); i++)
         {
             if (this->lightPositions[i] == object)
             {
@@ -235,6 +236,7 @@ void Shader::Update(ObserverAction action, void* object)
         {
             id = this->lightPositions.size();
             this->lightPositions.push_back(object);
+            this->SetUniformLocationValue("lightNumber", (int)this->lightPositions.size());
         }
         LightData data = static_cast<DirectionLight*>(object)->GetData();
         this->SetUniformLocationValue("light[" + std::to_string(id) + "].type", data.type);
@@ -248,7 +250,7 @@ void Shader::Update(ObserverAction action, void* object)
     case REF_LIGHT:
     {
         int id = -1;
-        for (int i = 0; i = this->lightPositions.size(); i++)
+        for (int i = 0; i < this->lightPositions.size(); i++)
         {
             if (this->lightPositions[i] == object)
             {
@@ -260,6 +262,7 @@ void Shader::Update(ObserverAction action, void* object)
         {
             id = this->lightPositions.size();
             this->lightPositions.push_back(object);
+            this->SetUniformLocationValue("lightNumber", (int)this->lightPositions.size());
         }
         LightData data = static_cast<ReflectorLight*>(object)->GetData();
         this->SetUniformLocationValue("light[" + std::to_string(id) + "].type", data.type);
@@ -269,6 +272,7 @@ void Shader::Update(ObserverAction action, void* object)
         this->SetUniformLocationValue("light[" + std::to_string(id) + "].quadratic", data.quadratic);
         this->SetUniformLocationValue("light[" + std::to_string(id) + "].position", data.position);
         this->SetUniformLocationValue("light[" + std::to_string(id) + "].direction", data.direction);
+        this->SetUniformLocationValue("light[" + std::to_string(id) + "].angle", data.angle);
         break;
     }
     default:

@@ -65,7 +65,6 @@
     <None Include="shaders\constant.frag" />
     <None Include="shaders\lambert.frag" />
     <None Include="shaders\phong.frag" />
-    <None Include="shaders\phongwrong.frag" />
     <None Include="shaders\vertex.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

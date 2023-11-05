@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h> 
 #include "Camera.h"
+#include "Light.h"
 
 class App
 {
@@ -22,6 +23,7 @@ private:
 	double yPos = 300;
 	double xPos = 400;
 	Camera* camera;
+	ReflectorLight* flashLight;
 
 public: 
 	void run();

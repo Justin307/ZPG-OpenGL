@@ -150,8 +150,5 @@
     <None Include="shaders\phong.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="shaders\phongwrong.frag">
-      <Filter>Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>

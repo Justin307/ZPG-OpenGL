@@ -41,6 +41,12 @@ glm::vec3 Camera::GetPosition()
 	return this->eye;
 }
 
+glm::vec3 Camera::GetDirection()
+{
+	return this->center;
+}
+
+
 /*
 *	https://lms.vsb.cz/pluginfile.php/2227895/mod_resource/content/1/ZPG_Prednasky_4.pdf
 *	Page 11/31

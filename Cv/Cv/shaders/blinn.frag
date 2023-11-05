@@ -8,6 +8,8 @@ struct Light
 	float linear;
 	float quadratic;
 	vec3 position;
+	vec3 direction;
+	float angle;
 };
 
 struct Material
@@ -18,7 +20,8 @@ struct Material
 	float shininess;
 };
 
-uniform Light light;
+uniform Light light[10];
+uniform int lightNumber;
 uniform Material material;
 
 in vec4 worldPos;
@@ -30,28 +33,78 @@ out vec4 frag_colour;
 
 void main () 
 {
+	vec4 diffuse = vec4(0.0);
+	vec4 specular = vec4(0.0);
+	vec4 ambient = vec4(material.ambient, 1.0f);
+	for(int i = 0; i < lightNumber; i++)
+	{
+		//PositionedLight
+		if(light[i].type == 1)
+		{
+			float distance = length(light[i].position - vec3(worldPos));
 
-	float distance = length(light.position - vec3(worldPos));
+			float attenuation = 1.0 / (light[i].constant + light[i].linear * distance + light[i].quadratic * distance * distance);
+		
+			vec3 lightDir = normalize(light[i].position - vec3(worldPos));
 
-	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
+			vec3 viewDir = normalize(cameraPos - vec3(worldPos));
 
-	vec3 lightDir = normalize(light.position - vec3(worldPos));
+			vec3 halfwayDir = normalize(lightDir + viewDir );
 
-	vec3 viewDir = normalize(cameraPos - vec3(worldPos));
+			float diff = max(dot(lightDir, normalize(worldNorm)),0.0);
+			diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color * attenuation;
 
-	vec3 halfwayDir = normalize(lightDir + viewDir );
+			vec3 reflectDir = reflect ( - lightDir , worldNorm );
 
-	vec4 ambient = light.color * vec4(material.ambient, 1.0f);
-
-	float diff = max(dot(lightDir, normalize(worldNorm)),0.0);
-    vec4 diffuse = (diff * vec4(material.diffuse,1.0f)) * light.color * attenuation;
-
-	vec3 reflectDir = reflect ( - lightDir , worldNorm );
-
-	float spec = pow ( max ( dot ( halfwayDir , normalize(worldNorm) ) , 0.0) , material.shininess);
+			float spec = pow ( max ( dot ( halfwayDir , normalize(worldNorm) ) , 0.0) , material.shininess);
 	
-	vec4 specular = (spec * vec4(material.specular,1.0f)) * light.color * attenuation;
-;
+			specular += (spec * vec4(material.specular,1.0f)) * light[i].color * attenuation;
+		}
+		//DirectionLight
+		else if (light[i].type == 2)
+		{
+			vec3 lightDir = normalize(-light[i].direction);
 
-	frag_colour = ambient + diffuse + specular ;
+			vec3 viewDir = normalize(cameraPos - vec3(worldPos));
+
+			vec3 halfwayDir = normalize(lightDir + viewDir );
+
+			float diff = max(dot(lightDir, normalize(worldNorm)),0.0);
+			diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color;
+
+			vec3 reflectDir = reflect ( - lightDir , worldNorm );
+
+			float spec = pow ( max ( dot ( halfwayDir , normalize(worldNorm) ) , 0.0) , material.shininess);
+	
+			specular += (spec * vec4(material.specular,1.0f)) * light[i].color;
+		}
+		//ReflectorLight
+		else if (light[i].type == 3)
+		{
+			vec3 lightDir = normalize(light[i].position - vec3(worldPos));
+
+			float angle = dot(-lightDir, normalize(light[i].direction));
+			if(angle >= radians(light[i].angle))
+			{
+				float distance = length(light[i].position - vec3(worldPos));
+
+				float attenuation = 1.0 / (light[i].constant + light[i].linear * distance + light[i].quadratic * distance * distance);
+
+				vec3 viewDir = normalize(cameraPos - vec3(worldPos));
+
+				vec3 halfwayDir = normalize(lightDir + viewDir );
+
+				float diff = max(dot(lightDir, normalize(worldNorm)),0.0);
+				diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color * attenuation;
+
+				vec3 reflectDir = reflect ( - lightDir , worldNorm );
+
+				float spec = pow ( max ( dot ( halfwayDir , normalize(worldNorm) ) , 0.0) , material.shininess);
+	
+				specular += (spec * vec4(material.specular,1.0f)) * light[i].color * attenuation;
+			}
+		}
+	}
+
+	frag_colour = ambient + diffuse + specular;
 }

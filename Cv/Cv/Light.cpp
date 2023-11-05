@@ -87,11 +87,6 @@ DirectionLight::DirectionLight(glm::vec4 color, glm::vec3 direction) :
 {
 }
 
-DirectionLight::DirectionLight(glm::vec4 color, float constant, float linear, float quadratic, glm::vec3 direction) :
-	Light(color, constant, linear, quadratic), direction(direction)
-{
-}
-
 void DirectionLight::NotifyObservers()
 {
 	for (auto o : observers)
@@ -127,13 +122,13 @@ ReflectorLight::ReflectorLight(glm::vec4 color, glm::vec3 position) :
 {
 }
 
-ReflectorLight::ReflectorLight(glm::vec4 color, glm::vec3 position, glm::vec3 direction) :
-	PositionedLight(color, position), direction(direction)
+ReflectorLight::ReflectorLight(glm::vec4 color, glm::vec3 position, glm::vec3 direction, float angle) :
+	PositionedLight(color, position), direction(direction), angle(angle)
 {
 }
 
-ReflectorLight::ReflectorLight(glm::vec4 color, float constant, float linear, float quadratic, glm::vec3 position, glm::vec3 direction) :
-	PositionedLight(color, constant, linear, quadratic, position), direction(direction)
+ReflectorLight::ReflectorLight(glm::vec4 color, float constant, float linear, float quadratic, glm::vec3 position, glm::vec3 direction, float angle) :
+	PositionedLight(color, constant, linear, quadratic, position), direction(direction), angle(angle)
 {
 }
 
@@ -148,6 +143,13 @@ void ReflectorLight::NotifyObservers()
 void ReflectorLight::SetDirection(glm::vec3 direction)
 {
 	this->direction = direction;
+	NotifyObservers();
+}
+
+void ReflectorLight::SetAngle(float angle)
+{
+	this->angle = angle;
+	NotifyObservers();
 }
 
 LightData ReflectorLight::GetData()
@@ -160,6 +162,7 @@ LightData ReflectorLight::GetData()
 	data.quadratic = this->quadratic;
 	data.position = this->position;
 	data.direction = this->direction;
+	data.angle = this->angle;
 	return data;
 }
 

@@ -16,6 +16,7 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 //Include my headers
 #include "Shader.h"
@@ -41,29 +42,35 @@ void App::error_callback(int error, const char* description) { fputs(description
 
 void App::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    App* app = App::GetInstance();
     if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        App::GetInstance()->camera->MoveFront();
+        app->camera->MoveFront();
     }
     else if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        App::GetInstance()->camera->MoveBack();
+        app->camera->MoveBack();
     }
     else if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        App::GetInstance()->camera->MoveLeft();
+        app->camera->MoveLeft();
     }
     else if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        App::GetInstance()->camera->MoveRight();
+        app->camera->MoveRight();
     }
     else if (key == GLFW_KEY_LEFT_SHIFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        App::GetInstance()->camera->MoveUp();
+        app->camera->MoveUp();
     }
     else if (key == GLFW_KEY_LEFT_CONTROL && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        App::GetInstance()->camera->MoveDown();
+        app->camera->MoveDown();
+    }
+
+    if (app->flashLight != nullptr)
+    {
+        app->flashLight->SetPosition(app->camera->GetPosition());
     }
 }
 
@@ -77,6 +84,12 @@ void App::cursor_callback(GLFWwindow* window, double x, double y)
         app->xPos = x;
         app->yPos = y;
         app->camera->MoveMouse(xDiff, yDiff);
+    }
+    if (app->flashLight != nullptr)
+    {
+        app->flashLight->SetDirection(app->camera->GetDirection());
+        std::cout << app->flashLight->position.x << " " << app->flashLight->position.y << " " << app->flashLight->position.z << " ";
+        std::cout << app->flashLight->direction.x << " " << app->flashLight->direction.y << " " << app->flashLight->direction.z << std::endl;
     }
 }
 
@@ -198,13 +211,29 @@ void App::run()
     camera->AttachObserver(blinn);
     camera->NotifyObservers();
 
-    PositionedLight* light = new PositionedLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    /*PositionedLight* light = new PositionedLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.5f, 4.0f, 0.0f));
     light->AttachObserver(lambert);
     light->AttachObserver(phong);
     light->AttachObserver(blinn);
-    light->NotifyObservers();
+    light->NotifyObservers();*/
+    ReflectorLight* light2 = new ReflectorLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0, -1.0, 0.0), 55.0f);
+    light2->AttachObserver(lambert);
+    light2->AttachObserver(phong);
+    light2->AttachObserver(blinn);
+    light2->NotifyObservers();
+    this->flashLight = light2;
+    /*ReflectorLight* light4 = new ReflectorLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0, 0.0, 0.0), 2.0f);
+    light4->AttachObserver(lambert);
+    light4->AttachObserver(phong);
+    light4->AttachObserver(blinn);
+    light4->NotifyObservers();*/
+    /*DirectionLight* light3 = new DirectionLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+    light3->AttachObserver(lambert);
+    light3->AttachObserver(phong);
+    light3->AttachObserver(blinn);
+    light3->NotifyObservers();*/
 
-    Material* emerald = new Material(glm::vec3(0.0215, 0.1745, 0.0215),glm::vec3(0.07568, 0.61424, 0.07568), glm::vec3(0.633, 0.727811, 0.633), 32);
+    Material* emerald = new Material(glm::vec3(0.0215, 0.1745, 0.0215), glm::vec3(0.07568, 0.61424, 0.07568), glm::vec3(0.633, 0.727811, 0.633), 32);
     Material* ruby = new Material(glm::vec3(0.1745, 0.01175, 0.01175),glm::vec3(0.61424, 0.04136, 0.04136), glm::vec3(0.727811, 0.626959, 0.626959), 32);
     Material* bronze = new Material(glm::vec3(0.2125, 0.1275, 0.054),glm::vec3(0.714, 0.4284, 0.18144), glm::vec3(0.393548, 0.271906, 0.166721), 8);
     Material* silver = new Material(glm::vec3(0.19225, 0.19225, 0.19225),glm::vec3(0.50754, 0.50754, 0.50754), glm::vec3(0.508273, 0.508273, 0.508273), 16);
@@ -213,7 +242,7 @@ void App::run()
     
     Scene* scene = new Scene();
 
-#define SCENE 5
+#define SCENE 3
 
 #if SCENE == 1
     //Phong's four balls
@@ -309,15 +338,10 @@ void App::run()
     scene->AddModel(new DrawableObject(new Model(gift, sizeof(gift)), lambert, ruby, cometTransformation));
 
 #elif SCENE == 3 
-    //Phong's light trimming
-    Shader* phongwrong = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\phongwrong.frag"));
-    camera->AttachObserver(phongwrong);
-    light->AttachObserver(phongwrong);
-    TransformationTranslate* transformation1 = new TransformationTranslate(glm::vec3(2.0f, 0.0f, 0.0f));
-    TransformationTranslate* transformation2 = new TransformationTranslate(glm::vec3(-2.0f, 0.0f, 0.0f));
-    emerald->shininess = 1;
-    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phong, emerald, transformation1));
-    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), phongwrong, emerald, transformation2));
+    //Light testing
+    scene->AddModel(new DrawableObject(new Model(plain, sizeof(plain)), lambert, emerald, new TransformationScale(glm::vec3(10.0f, 1.0f, 10.0f))));
+    scene->AddModel(new DrawableObject(new Model(sphere, sizeof(sphere)), blinn, ruby));
+    
 #elif SCENE == 4
     //Projection matrix testing
     TransformationTranslate* transformation1 = new TransformationTranslate(glm::vec3(6.0f, 0.0f, 0.0f));

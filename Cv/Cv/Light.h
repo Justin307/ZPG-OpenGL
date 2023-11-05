@@ -12,6 +12,7 @@ struct LightData
 	float quadratic;
 	glm::vec3 position;
 	glm::vec3 direction;
+	float angle;
 };
 
 class Light : public Observable
@@ -35,8 +36,8 @@ public:
 class PositionedLight : public Light
 {
 protected:
-	glm::vec3 position{0.0f};
 public:
+	glm::vec3 position{0.0f};
 	PositionedLight();
 	PositionedLight(glm::vec4 color, glm::vec3 position);
 	PositionedLight(glm::vec4 color, float constant, float linear, float quadratic, glm::vec3 position);
@@ -52,7 +53,6 @@ private:
 public:
 	DirectionLight();
 	DirectionLight(glm::vec4 color, glm::vec3 direction);
-	DirectionLight(glm::vec4 color, float constant, float linear, float quadratic, glm::vec3 direction);
 	void NotifyObservers();
 	void SetDirection(glm::vec3 direction);
 	LightData GetData();
@@ -61,14 +61,16 @@ public:
 class ReflectorLight : public PositionedLight
 {
 private:
-	glm::vec3 direction{ 1.0f, 0.0f, 1.0f };
+	float angle = 5.0f;
 public:
+	glm::vec3 direction{ 1.0f, 0.0f, 1.0f };
 	ReflectorLight();
 	ReflectorLight(glm::vec4 color, glm::vec3 position);
-	ReflectorLight(glm::vec4 color, glm::vec3 position, glm::vec3 direction);
-	ReflectorLight(glm::vec4 color, float constant, float linear, float quadratic, glm::vec3 position, glm::vec3 direction);
+	ReflectorLight(glm::vec4 color, glm::vec3 position, glm::vec3 direction, float angle);
+	ReflectorLight(glm::vec4 color, float constant, float linear, float quadratic, glm::vec3 position, glm::vec3 direction, float angle);
 	void NotifyObservers();
 	void SetDirection(glm::vec3 direction);
+	void SetAngle(float angle);
 	LightData GetData();
 
 };
