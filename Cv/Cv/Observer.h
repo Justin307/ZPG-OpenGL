@@ -2,8 +2,10 @@
 
 enum ObserverAction
 {
+	CAMERA,
 	POS_LIGHT,
-	CAMERA
+	DIR_LIGHT,
+	REF_LIGHT
 };
 
 class Observer

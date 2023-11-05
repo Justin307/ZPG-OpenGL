@@ -1,5 +1,8 @@
 #include "Light.h"
 
+/*
+*	Class Light
+*/
 Light::Light()
 {
 }
@@ -28,6 +31,10 @@ void Light::SetAtteuation(float constant, float linear, float quadratic)
 	NotifyObservers();
 }
 
+
+/*
+*	Class PositionedLight
+*/
 PositionedLight::PositionedLight()
 {
 }
@@ -67,3 +74,95 @@ LightData PositionedLight::GetData()
 	data.position = this->position;
 	return data;
 }
+
+/*
+*	Class DirectionLight
+*/
+DirectionLight::DirectionLight()
+{
+}
+
+DirectionLight::DirectionLight(glm::vec4 color, glm::vec3 direction) :
+	Light(color), direction(direction)
+{
+}
+
+DirectionLight::DirectionLight(glm::vec4 color, float constant, float linear, float quadratic, glm::vec3 direction) :
+	Light(color, constant, linear, quadratic), direction(direction)
+{
+}
+
+void DirectionLight::NotifyObservers()
+{
+	for (auto o : observers)
+	{
+		o->Update(DIR_LIGHT, this);
+	}
+}
+
+void DirectionLight::SetDirection(glm::vec3 direction)
+{
+	this->direction = direction;
+	NotifyObservers();
+}
+
+LightData DirectionLight::GetData()
+{
+	LightData data;
+	data.type = 2;
+	data.color = this->color;
+	data.constant = this->constant;
+	data.linear = this->linear;
+	data.quadratic = this->quadratic;
+	data.direction = this->direction;
+	return data;
+}
+
+ReflectorLight::ReflectorLight()
+{
+}
+
+ReflectorLight::ReflectorLight(glm::vec4 color, glm::vec3 position) :
+	PositionedLight(color, position)
+{
+}
+
+ReflectorLight::ReflectorLight(glm::vec4 color, glm::vec3 position, glm::vec3 direction) :
+	PositionedLight(color, position), direction(direction)
+{
+}
+
+ReflectorLight::ReflectorLight(glm::vec4 color, float constant, float linear, float quadratic, glm::vec3 position, glm::vec3 direction) :
+	PositionedLight(color, constant, linear, quadratic, position), direction(direction)
+{
+}
+
+void ReflectorLight::NotifyObservers()
+{
+	for (auto o : observers)
+	{
+		o->Update(REF_LIGHT, this);
+	}
+}
+
+void ReflectorLight::SetDirection(glm::vec3 direction)
+{
+	this->direction = direction;
+}
+
+LightData ReflectorLight::GetData()
+{
+	LightData data;
+	data.type = 3;
+	data.color = this->color;
+	data.constant = this->constant;
+	data.linear = this->linear;
+	data.quadratic = this->quadratic;
+	data.position = this->position;
+	data.direction = this->direction;
+	return data;
+}
+
+
+
+

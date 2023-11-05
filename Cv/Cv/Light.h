@@ -26,7 +26,7 @@ public:
 	Light();
 	Light(glm::vec4 color);
 	Light(glm::vec4 color, float constant, float linear, float quadratic);
-	void NotifyObservers() = 0;
+	virtual void NotifyObservers() = 0;
 	void SetColor(glm::vec4 color);
 	void SetAtteuation(float constant, float linear, float quadratic);
 	virtual LightData GetData() = 0;
@@ -34,7 +34,7 @@ public:
 
 class PositionedLight : public Light
 {
-private:
+protected:
 	glm::vec3 position{0.0f};
 public:
 	PositionedLight();
@@ -45,3 +45,30 @@ public:
 	LightData GetData();
 };
 
+class DirectionLight : public Light
+{
+private: 
+	glm::vec3 direction{ 0.0f, -1.0f, 0.0f };
+public:
+	DirectionLight();
+	DirectionLight(glm::vec4 color, glm::vec3 direction);
+	DirectionLight(glm::vec4 color, float constant, float linear, float quadratic, glm::vec3 direction);
+	void NotifyObservers();
+	void SetDirection(glm::vec3 direction);
+	LightData GetData();
+};
+
+class ReflectorLight : public PositionedLight
+{
+private:
+	glm::vec3 direction{ 1.0f, 0.0f, 1.0f };
+public:
+	ReflectorLight();
+	ReflectorLight(glm::vec4 color, glm::vec3 position);
+	ReflectorLight(glm::vec4 color, glm::vec3 position, glm::vec3 direction);
+	ReflectorLight(glm::vec4 color, float constant, float linear, float quadratic, glm::vec3 position, glm::vec3 direction);
+	void NotifyObservers();
+	void SetDirection(glm::vec3 direction);
+	LightData GetData();
+
+};

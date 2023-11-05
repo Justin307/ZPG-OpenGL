@@ -206,6 +206,29 @@ void Shader::Update(ObserverAction action, void* object)
         this->SetUniformLocationValue(std::string("light.position"), data.position);
         break;
     }
+    case DIR_LIGHT:
+    {
+        LightData data = static_cast<DirectionLight*>(object)->GetData();
+        this->SetUniformLocationValue(std::string("light.type"), data.type);
+        this->SetUniformLocationValue(std::string("light.color"), data.color);
+        this->SetUniformLocationValue(std::string("light.constant"), data.constant);
+        this->SetUniformLocationValue(std::string("light.linear"), data.linear);
+        this->SetUniformLocationValue(std::string("light.quadratic"), data.quadratic);
+        this->SetUniformLocationValue(std::string("light.direction"), data.direction);
+        break;
+    }
+    case REF_LIGHT:
+    {
+        LightData data = static_cast<ReflectorLight*>(object)->GetData();
+        this->SetUniformLocationValue(std::string("light.type"), data.type);
+        this->SetUniformLocationValue(std::string("light.color"), data.color);
+        this->SetUniformLocationValue(std::string("light.constant"), data.constant);
+        this->SetUniformLocationValue(std::string("light.linear"), data.linear);
+        this->SetUniformLocationValue(std::string("light.quadratic"), data.quadratic);
+        this->SetUniformLocationValue(std::string("light.position"), data.position);
+        this->SetUniformLocationValue(std::string("light.direction"), data.direction);
+        break;
+    }
     default:
     {
         break;
