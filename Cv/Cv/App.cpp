@@ -213,7 +213,7 @@ void App::run()
     
     Scene* scene = new Scene();
 
-#define SCENE 1
+#define SCENE 5
 
 #if SCENE == 1
     //Phong's four balls

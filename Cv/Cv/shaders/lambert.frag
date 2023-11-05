@@ -4,6 +4,9 @@ struct Light
 {
 	int type;
 	vec4 color;
+	float constant;
+	float linear;
+	float quadratic;
 	vec3 position;
 };
 
@@ -26,13 +29,10 @@ out vec4 frag_colour;
 
 void main () 
 {
-	float constant = 1.0;
-    float linear = 0.09;
-    float quadratic = 0.032;
 
 	float distance = length(light.position - vec3(worldPos));
 
-	float attenuation = 1.0 / (constant + linear * distance + quadratic * distance * distance);
+	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
 
 	vec3 lightDir = light.position - vec3(worldPos);
 	float diff = max(dot(normalize(lightDir), normalize(worldNorm)),0.0);

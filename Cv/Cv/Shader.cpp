@@ -199,8 +199,10 @@ void Shader::Update(ObserverAction action, void* object)
     {
         LightData data = static_cast<PositionedLight*>(object)->GetData();
         this->SetUniformLocationValue(std::string("light.type"), data.type);
-        glm::vec4 color = data.color;
-        this->SetUniformLocationValue(std::string("light.color"), color);
+        this->SetUniformLocationValue(std::string("light.color"), data.color);
+        this->SetUniformLocationValue(std::string("light.constant"), data.constant);
+        this->SetUniformLocationValue(std::string("light.linear"), data.linear);
+        this->SetUniformLocationValue(std::string("light.quadratic"), data.quadratic);
         this->SetUniformLocationValue(std::string("light.position"), data.position);
         break;
     }
