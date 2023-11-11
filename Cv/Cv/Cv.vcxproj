@@ -30,6 +30,8 @@
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TransformationComponent.cpp" />
     <ClCompile Include="TransformationComposite.cpp" />
     <ClCompile Include="TransformationRotate.cpp" />
@@ -55,6 +57,8 @@
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="TransformationComponent.h" />
     <ClInclude Include="TransformationRotate.h" />
     <ClInclude Include="TransformationScale.h" />

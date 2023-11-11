@@ -1,13 +1,14 @@
 #include "DrawableObject.h"
 
-DrawableObject::DrawableObject(Model* model, Shader* shader, Material* material)
+DrawableObject::DrawableObject(Model* model, Shader* shader, Material* material, Texture* texture)
 {
 	this->model = model;
 	this->shader = shader;
 	this->material = material;
 	this->transformation = nullptr;
+	this->texture = texture;
 }
-DrawableObject::DrawableObject(Model* model, Shader* shader, Material* material, TransformationComponent* transformation)
+DrawableObject::DrawableObject(Model* model, Shader* shader, Material* material, Texture* texture, TransformationComponent* transformation)
 {
 	this->model = model;
 	this->shader = shader;
@@ -18,6 +19,7 @@ DrawableObject::DrawableObject(Model* model, Shader* shader, Material* material,
 void DrawableObject::Render()
 {
 	shader->Use();
+	texture->Use();
 	glm::mat4 matrix = glm::mat4(1.0f);
 	if (transformation != nullptr)
 	{

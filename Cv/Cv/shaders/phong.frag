@@ -23,19 +23,23 @@ struct Material
 uniform Light light[10];
 uniform int lightNumber;
 uniform Material material;
+uniform sampler2D textureUnitId;
 
 in vec4 worldPos;
 in vec3 worldNorm;
 in vec3 color;
+in vec2 uv;
 in vec3 cameraPos;
 
 out vec4 frag_colour;
 
 void main () 
 {
+	vec4 tex = texture(textureUnitId, uv);
+
 	vec4 diffuse = vec4(0.0);
 	vec4 specular = vec4(0.0);
-	vec4 ambient = vec4(material.ambient, 1.0f);
+	vec4 ambient = vec4(material.ambient, 1.0f) * tex;
 	for(int i = 0; i < lightNumber; i++)
 	{
 		//PositionedLight
@@ -50,7 +54,7 @@ void main ()
 			vec3 viewDir = normalize(cameraPos - vec3(worldPos));
 
 			float diff = max(dot(lightDir, normalize(worldNorm)),0.0);
-			diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color * attenuation;
+			diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color * attenuation  * tex;
 
 			vec3 reflectDir = normalize( reflect ( - lightDir , normalize(worldNorm) ) );
 
@@ -71,7 +75,7 @@ void main ()
 			vec3 viewDir = normalize(cameraPos - vec3(worldPos));
 
 			float diff = max(dot(lightDir, normalize(worldNorm)),0.0);
-			diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color;
+			diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color  * tex;
 
 			vec3 reflectDir = normalize( reflect ( - lightDir , normalize(worldNorm) ) );
 
@@ -101,7 +105,7 @@ void main ()
 				vec3 viewDir = normalize(cameraPos - vec3(worldPos));
 
 				float diff = max(dot(lightDir, normalize(worldNorm)),0.0);
-				diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color * attenuation;
+				diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color * attenuation * tex;
 
 				vec3 reflectDir = normalize( reflect ( - lightDir , normalize(worldNorm) ) );
 

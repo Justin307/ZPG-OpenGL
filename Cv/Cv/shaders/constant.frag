@@ -1,8 +1,6 @@
 #version 330
 
-in vec4 worldPos;
-in vec3 worldNor;
-in vec3 color;
+
 
 struct Material
 {
@@ -14,9 +12,16 @@ struct Material
 
 uniform Material material;
 
+uniform sampler2D textureUnitId;
+
+in vec4 worldPos;
+in vec3 worldNorm;
+in vec3 color;
+in vec2 uv;
+
 out vec4 frag_colour;
 
 void main () 
 {
-	frag_colour = vec4 ( normalize(material.ambient + material.diffuse + material.specular) , 1.0 );
+	frag_colour = texture(textureUnitId, uv);
 }

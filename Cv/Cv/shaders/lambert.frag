@@ -24,16 +24,21 @@ uniform Light light[10];
 uniform int lightNumber;
 uniform Material material;
 
+uniform sampler2D textureUnitId;
+
 in vec4 worldPos;
 in vec3 worldNorm;
 in vec3 color;
+in vec2 uv;
 
 out vec4 frag_colour;
 
 void main () 
 {
+	vec4 tex = texture(textureUnitId, uv);
+
 	vec4 diffuse = vec4(0.0);
-	vec4 ambient = vec4(material.ambient, 1.0f);
+	vec4 ambient = vec4(material.ambient, 1.0f) * tex;
 	for(int i = 0; i < lightNumber; i++)
 	{
 		//PositionedLight
@@ -45,14 +50,14 @@ void main ()
 
 			vec3 lightDir = normalize(light[i].position - vec3(worldPos));
 			float diff = max(dot(lightDir, normalize(worldNorm)),0.0);
-			diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color * attenuation;
+			diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color * attenuation * tex;
 		}
 		//DirectionLight
 		else if (light[i].type == 2)
 		{
 			vec3 lightDir = -normalize(light[i].direction);
 			float diff = max(dot(lightDir, normalize(worldNorm)),0.0);
-			diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color;
+			diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color * tex;
 		}
 		//ReflectorLight
 		else if (light[i].type == 3)
@@ -67,9 +72,9 @@ void main ()
 				float attenuation = 1.0 / (light[i].constant + light[i].linear * distance + light[i].quadratic * distance * distance);
 				
 				float diff = max(dot(lightDir, normalize(worldNorm)),0.0);
-				diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color * attenuation;
+				diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color * attenuation * tex;
 			}
 		}
 	}
-	frag_colour = diffuse + ambient;
+	frag_colour = ambient + diffuse;
 }
