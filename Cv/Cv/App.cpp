@@ -216,7 +216,7 @@ void App::run()
     light->AttachObserver(phong);
     light->AttachObserver(blinn);
     light->NotifyObservers();*/
-    ReflectorLight* light2 = new ReflectorLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0, -1.0, 0.0), 55.0f);
+    ReflectorLight* light2 = new ReflectorLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0, -1.0, 0.0), 20.0f);
     light2->AttachObserver(lambert);
     light2->AttachObserver(phong);
     light2->AttachObserver(blinn);
@@ -242,7 +242,7 @@ void App::run()
     
     Scene* scene = new Scene();
 
-#define SCENE 3
+#define SCENE 5
 
 #if SCENE == 1
     //Phong's four balls
@@ -355,7 +355,7 @@ void App::run()
     light->SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
 #elif SCENE == 5
     //Forest
-    light->SetPosition(glm::vec3(0.0f, 0.25f, 0.0f));
+    //light->SetPosition(glm::vec3(0.0f, 0.25f, 0.0f));
     TransformationScale* planeScale = new TransformationScale(glm::vec3(50.0f, 1.0f, 50.0f));
     TransformationTranslate* planeTranslate = new TransformationTranslate(glm::vec3(0.0f, -1.0f, 0.0f));
     TransformationComposite* planeTransformations = new TransformationComposite();

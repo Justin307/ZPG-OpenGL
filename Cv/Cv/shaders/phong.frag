@@ -91,7 +91,7 @@ void main ()
 			vec3 lightDir = normalize(light[i].position - vec3(worldPos));
 
 			float angle = dot(-lightDir, normalize(light[i].direction));
-			if(angle >= radians(light[i].angle))
+			if(angle >= cos(radians(light[i].angle)))
 			{
 				float distance = length(light[i].position - vec3(worldPos));
 
