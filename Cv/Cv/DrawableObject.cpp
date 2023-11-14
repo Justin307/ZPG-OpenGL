@@ -13,6 +13,7 @@ DrawableObject::DrawableObject(Model* model, Shader* shader, Material* material,
 	this->model = model;
 	this->shader = shader;
 	this->material = material;
+	this->texture = texture;
 	this->transformation = transformation;
 }
 

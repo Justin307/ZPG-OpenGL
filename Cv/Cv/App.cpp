@@ -227,11 +227,11 @@ void App::run()
     light4->AttachObserver(phong);
     light4->AttachObserver(blinn);
     light4->NotifyObservers();*/
-    /*DirectionLight* light3 = new DirectionLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+    DirectionLight* light3 = new DirectionLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
     light3->AttachObserver(lambert);
     light3->AttachObserver(phong);
     light3->AttachObserver(blinn);
-    light3->NotifyObservers();*/
+    light3->NotifyObservers();
 
     Material* material = new Material(glm::vec3(0.1, 0.1, 0.1), glm::vec3(0.8, 0.8, 0.8), glm::vec3(1.0, 1.0, 1.0), 32);
     
@@ -248,7 +248,8 @@ void App::run()
        -1.0f, 0.0f,-1.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f
     };
 
-    scene->AddModel(new DrawableObject(new Model(plain, sizeof(plain)), lambert , material, new Texture("wall.jpg")));
+    scene->AddModel(new DrawableObject(new Model("models/model.obj"), lambert, material, new Texture("models/test.jpg")));
+    scene->AddModel(new DrawableObject(new Model("models/plane.obj"), lambert, material, new Texture("models/wall.jpg"), new TransformationScale(glm::vec3(20.0, 1.0, 20.0))));
 
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
