@@ -9,9 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Models">
-      <UniqueIdentifier>{16a1c2b6-c9f6-402d-8d81-96bc3f5ca179}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{570506f5-ae2b-4451-a60c-f77b99690ef9}</UniqueIdentifier>
     </Filter>
@@ -109,18 +106,6 @@
     <ClInclude Include="Observer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="models\plain.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="models\sphere.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="models\suzi_flat.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="models\suzi_smooth.h">
-      <Filter>Models</Filter>
-    </ClInclude>
     <ClInclude Include="Observable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -135,15 +120,6 @@
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="models\tree.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="models\bushes.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="models\gift.h">
-      <Filter>Models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -46,13 +46,6 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="models\bushes.h" />
-    <ClInclude Include="models\gift.h" />
-    <ClInclude Include="models\plain.h" />
-    <ClInclude Include="models\sphere.h" />
-    <ClInclude Include="models\suzi_flat.h" />
-    <ClInclude Include="models\suzi_smooth.h" />
-    <ClInclude Include="models\tree.h" />
     <ClInclude Include="Observable.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Scene.h" />

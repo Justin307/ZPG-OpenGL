@@ -1,7 +1,5 @@
 #version 330
 
-
-
 struct Material
 {
 	vec3 ambient;

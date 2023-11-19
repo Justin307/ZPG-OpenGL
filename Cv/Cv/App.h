@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h> 
 #include "Camera.h"
 #include "Light.h"
+#include "TransformationTranslate.h"
 
 class App
 {
@@ -22,8 +23,9 @@ private:
 	static App* app;
 	double yPos = 300;
 	double xPos = 400;
-	Camera* camera;
-	ReflectorLight* flashLight;
+	Camera* camera = nullptr;
+	ReflectorLight* flashLight = nullptr;
+	TransformationTranslate* skyboxMovement = nullptr;
 
 public: 
 	void run();

@@ -28,68 +28,66 @@
 #include "Camera.h"
 #include "Light.h"
 
-
-//Include models
-#include "models/sphere.h"
-#include "models/suzi_flat.h"
-#include "models/suzi_smooth.h"
-#include "models/gift.h"
-#include "models/tree.h"
-#include "models/bushes.h"
-//#include "models/plain.h"
-
 void App::error_callback(int error, const char* description) { fputs(description, stderr); }
 
 void App::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     App* app = App::GetInstance();
-    if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    if (app->camera != nullptr)
     {
-        app->camera->MoveFront();
-    }
-    else if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    {
-        app->camera->MoveBack();
-    }
-    else if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    {
-        app->camera->MoveLeft();
-    }
-    else if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    {
-        app->camera->MoveRight();
-    }
-    else if (key == GLFW_KEY_LEFT_SHIFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    {
-        app->camera->MoveUp();
-    }
-    else if (key == GLFW_KEY_LEFT_CONTROL && (action == GLFW_PRESS || action == GLFW_REPEAT))
-    {
-        app->camera->MoveDown();
-    }
+        if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
+        {
+            app->camera->MoveFront();
+        }
+        else if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
+        {
+            app->camera->MoveBack();
+        }
+        else if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
+        {
+            app->camera->MoveLeft();
+        }
+        else if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
+        {
+            app->camera->MoveRight();
+        }
+        else if (key == GLFW_KEY_LEFT_SHIFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+        {
+            app->camera->MoveUp();
+        }
+        else if (key == GLFW_KEY_LEFT_CONTROL && (action == GLFW_PRESS || action == GLFW_REPEAT))
+        {
+            app->camera->MoveDown();
+        }
 
-    if (app->flashLight != nullptr)
-    {
-        app->flashLight->SetPosition(app->camera->GetPosition());
+        if (app->flashLight != nullptr)
+        {
+            app->flashLight->SetPosition(app->camera->GetPosition());
+        }
     }
 }
 
 void App::cursor_callback(GLFWwindow* window, double x, double y)
 {
     App* app = App::GetInstance();
-    if (app->cameraMovement)
+    if (app->camera != nullptr)
     {
-        double xDiff = app->xPos - x;
-        double yDiff = app->yPos - y;
-        app->xPos = x;
-        app->yPos = y;
-        app->camera->MoveMouse(xDiff, yDiff);
-    }
-    if (app->flashLight != nullptr)
-    {
-        app->flashLight->SetDirection(app->camera->GetDirection());
-        std::cout << app->flashLight->position.x << " " << app->flashLight->position.y << " " << app->flashLight->position.z << " ";
-        std::cout << app->flashLight->direction.x << " " << app->flashLight->direction.y << " " << app->flashLight->direction.z << std::endl;
+        if (app->cameraMovement)
+        {
+            double xDiff = app->xPos - x;
+            double yDiff = app->yPos - y;
+            app->xPos = x;
+            app->yPos = y;
+            app->camera->MoveMouse(xDiff, yDiff);
+        }
+        if (app->flashLight != nullptr)
+        {
+            app->flashLight->SetDirection(app->camera->GetDirection());
+            std::cout << app->flashLight->position.x << " " << app->flashLight->position.y << " " << app->flashLight->position.z << " ";
+            std::cout << app->flashLight->direction.x << " " << app->flashLight->direction.y << " " << app->flashLight->direction.z << std::endl;
+        }
+        if (app->skyboxMovement != nullptr)
+            app->skyboxMovement->value = app->camera->GetPosition();
     }
 }
 
@@ -227,7 +225,7 @@ void App::run()
     light4->AttachObserver(phong);
     light4->AttachObserver(blinn);
     light4->NotifyObservers();*/
-    DirectionLight* light3 = new DirectionLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+    DirectionLight* light3 = new DirectionLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -1.0f, 0.0f));
     light3->AttachObserver(lambert);
     light3->AttachObserver(phong);
     light3->AttachObserver(blinn);
@@ -249,7 +247,15 @@ void App::run()
     };
 
     scene->AddModel(new DrawableObject(new Model("models/model.obj"), lambert, material, new Texture("models/test.jpg")));
-    scene->AddModel(new DrawableObject(new Model("models/plane.obj"), lambert, material, new Texture("models/wall.jpg"), new TransformationScale(glm::vec3(20.0, 1.0, 20.0))));
+    scene->AddModel(new DrawableObject(new Model("models/plane.obj"), lambert, material, new Texture("models/grass.jpg"), new TransformationScale(glm::vec3(200.0, 1.0, 200.0))));
+    scene->AddModel(new DrawableObject(new Model("models/LowPolyTreePack.obj"), lambert, material, new Texture("models/LowPolyTreePack.png"), new TransformationTranslate(glm::vec3(12.0, 0.0, 16.0))));
+    scene->AddModel(new DrawableObject(new Model("models/LowPolyTreePack.obj"), lambert, material, new Texture("models/LowPolyTreePack.png"), new TransformationTranslate(glm::vec3(-6.0, 0.0, 16.0))));
+    scene->AddModel(new DrawableObject(new Model("models/zombie.obj"), lambert, material, new Texture("models/zombie.png"), new TransformationTranslate(glm::vec3(0.0, 0.0, 12.0))));
+
+    TransformationTranslate* skyboxMovement = new TransformationTranslate(glm::vec3(0.0, 0.0, 0.0));
+    this->skyboxMovement = skyboxMovement;
+
+    scene->SetSkybox(new DrawableObject(new Model("models/skybox.obj"), constant, material, new Texture("models/skybox.jpg"), skyboxMovement));
 
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
