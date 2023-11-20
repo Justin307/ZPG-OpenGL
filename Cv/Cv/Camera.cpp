@@ -46,6 +46,11 @@ glm::vec3 Camera::GetDirection()
 	return this->center;
 }
 
+glm::vec2 Camera::GetResolution()
+{
+	return glm::vec2(this->widht, this->height);
+}
+
 
 /*
 *	https://lms.vsb.cz/pluginfile.php/2227895/mod_resource/content/1/ZPG_Prednasky_4.pdf

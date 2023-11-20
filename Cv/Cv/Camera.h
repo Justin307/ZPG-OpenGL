@@ -20,6 +20,7 @@ public:
     glm::mat4 GetProjection();
     glm::vec3 GetPosition();
     glm::vec3 GetDirection();
+    glm::vec2 GetResolution();
     void MoveFront();
     void MoveBack();
     void MoveLeft();

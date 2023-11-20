@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <cstdio>
 
 //Include my headers
 #include "Shader.h"
@@ -51,7 +52,7 @@ void App::key_callback(GLFWwindow* window, int key, int scancode, int action, in
         {
             app->camera->MoveRight();
         }
-        else if (key == GLFW_KEY_LEFT_SHIFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+        else if ((key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT || key == GLFW_KEY_SPACE) && (action == GLFW_PRESS || action == GLFW_REPEAT))
         {
             app->camera->MoveUp();
         }
@@ -80,23 +81,28 @@ void App::cursor_callback(GLFWwindow* window, double x, double y)
             app->yPos = y;
             app->camera->MoveMouse(xDiff, yDiff);
         }
+        else
+        {
+            app->xPos = x;
+            app->yPos = y;
+        }
         if (app->flashLight != nullptr)
         {
             app->flashLight->SetDirection(app->camera->GetDirection());
-            std::cout << app->flashLight->position.x << " " << app->flashLight->position.y << " " << app->flashLight->position.z << " ";
-            std::cout << app->flashLight->direction.x << " " << app->flashLight->direction.y << " " << app->flashLight->direction.z << std::endl;
         }
         if (app->skyboxMovement != nullptr)
+        {
             app->skyboxMovement->value = app->camera->GetPosition();
+        }
     }
 }
 
 
 void App::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
+    App* app = App::GetInstance();
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
     {
-        App* app = App::GetInstance();
         if (app->cameraMovement)
         {
             app->cameraMovement = false;
@@ -118,7 +124,32 @@ void App::mouse_button_callback(GLFWwindow* window, int button, int action, int 
             app->yPos = y;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
-    }      
+    }
+    else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        GLbyte color[4];
+        GLfloat depth;
+        GLuint index;
+
+        GLint x = (GLint)app->xPos;
+        GLint y = (GLint)app->yPos;
+
+        int newy = app->camera->GetResolution().y - y;
+
+        glReadPixels(x, newy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+        glReadPixels(x, newy, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+        glReadPixels(x, newy, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+
+        printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index % u\n", x, y, color[0], color[1], color[2], color[3], depth, index);
+    
+        glm::vec3 screenX = glm::vec3(x, newy, depth);
+        glm::mat4 view = app->camera->GetView();
+        glm::mat4 projection = app->camera->GetProjection();;
+        glm::vec4 viewPort = glm::vec4(0, 0, app->camera->GetResolution().x, app->camera->GetResolution().y);
+        glm::vec3 pos = glm::unProject(screenX, view, projection, viewPort);
+
+        printf("unProject [%f,%f,%f]\n", pos.x, pos.y, pos.z);
+    }
 }
 
 void App::window_size_callback(GLFWwindow* window, int width, int height)
@@ -184,6 +215,9 @@ App::App()
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 }
 
 void App::run()
@@ -209,12 +243,12 @@ void App::run()
     camera->AttachObserver(blinn);
     camera->NotifyObservers();
 
-    /*PositionedLight* light = new PositionedLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 2.0f, 0.0f));
+    PositionedLight* light = new PositionedLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0, 0.0, 15.0));
     light->AttachObserver(lambert);
     light->AttachObserver(phong);
     light->AttachObserver(blinn);
-    light->NotifyObservers();*/
-    ReflectorLight* light2 = new ReflectorLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0, -1.0, 0.0), 20.0f);
+    light->NotifyObservers();
+    ReflectorLight* light2 = new ReflectorLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0, -1.0, 0.0), 5.0f);
     light2->AttachObserver(lambert);
     light2->AttachObserver(phong);
     light2->AttachObserver(blinn);
@@ -225,11 +259,11 @@ void App::run()
     light4->AttachObserver(phong);
     light4->AttachObserver(blinn);
     light4->NotifyObservers();*/
-    DirectionLight* light3 = new DirectionLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -1.0f, 0.0f));
+    /*DirectionLight* light3 = new DirectionLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
     light3->AttachObserver(lambert);
     light3->AttachObserver(phong);
     light3->AttachObserver(blinn);
-    light3->NotifyObservers();
+    light3->NotifyObservers();*/
 
     Material* material = new Material(glm::vec3(0.1, 0.1, 0.1), glm::vec3(0.8, 0.8, 0.8), glm::vec3(1.0, 1.0, 1.0), 32);
     
@@ -246,20 +280,21 @@ void App::run()
        -1.0f, 0.0f,-1.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f
     };
 
-    scene->AddModel(new DrawableObject(new Model("models/model.obj"), lambert, material, new Texture("models/test.jpg")));
+    TransformationTranslate* skyboxMovement = new TransformationTranslate(glm::vec3(0.0, 0.0, 0.0));
+    scene->SetSkybox(new DrawableObject(new Model("models/skybox.obj"), constant, material, new Texture("models/skybox.jpg"), skyboxMovement));
+    this->skyboxMovement = skyboxMovement;
+
     scene->AddModel(new DrawableObject(new Model("models/plane.obj"), lambert, material, new Texture("models/grass.jpg"), new TransformationScale(glm::vec3(200.0, 1.0, 200.0))));
+    scene->AddModel(new DrawableObject(new Model("models/model.obj"), lambert, material, new Texture("models/test.jpg")));
     scene->AddModel(new DrawableObject(new Model("models/LowPolyTreePack.obj"), lambert, material, new Texture("models/LowPolyTreePack.png"), new TransformationTranslate(glm::vec3(12.0, 0.0, 16.0))));
     scene->AddModel(new DrawableObject(new Model("models/LowPolyTreePack.obj"), lambert, material, new Texture("models/LowPolyTreePack.png"), new TransformationTranslate(glm::vec3(-6.0, 0.0, 16.0))));
     scene->AddModel(new DrawableObject(new Model("models/zombie.obj"), lambert, material, new Texture("models/zombie.png"), new TransformationTranslate(glm::vec3(0.0, 0.0, 12.0))));
 
-    TransformationTranslate* skyboxMovement = new TransformationTranslate(glm::vec3(0.0, 0.0, 0.0));
-    this->skyboxMovement = skyboxMovement;
 
-    scene->SetSkybox(new DrawableObject(new Model("models/skybox.obj"), constant, material, new Texture("models/skybox.jpg"), skyboxMovement));
 
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         // render scene
         scene->Render();
         // update other events like input handling

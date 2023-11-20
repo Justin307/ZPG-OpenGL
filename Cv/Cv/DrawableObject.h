@@ -9,11 +9,13 @@
 class DrawableObject
 {
 private:
+	static char next_id;
 	Model* model;
 	Shader* shader;
 	TransformationComponent* transformation;
 	Material* material;
 	Texture* texture;
+	char id;
 
 public:
 	DrawableObject(Model* model, Shader* shader, Material* material, Texture* texture);

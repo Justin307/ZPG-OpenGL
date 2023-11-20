@@ -19,7 +19,7 @@ void Scene::Render()
 	if (this->skybox != nullptr)
 	{
 		this->skybox->Render();	
-		glClear(GL_DEPTH_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
 	for (DrawableObject* model : models)
