@@ -101,7 +101,7 @@ void App::cursor_callback(GLFWwindow* window, double x, double y)
 void App::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
     App* app = App::GetInstance();
-    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+    if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
     {
         if (app->cameraMovement)
         {
@@ -127,28 +127,43 @@ void App::mouse_button_callback(GLFWwindow* window, int button, int action, int 
     }
     else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
     {
-        GLbyte color[4];
-        GLfloat depth;
         GLuint index;
 
         GLint x = (GLint)app->xPos;
         GLint y = (GLint)app->yPos;
 
         int newy = app->camera->GetResolution().y - y;
-
-        glReadPixels(x, newy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
-        glReadPixels(x, newy, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
         glReadPixels(x, newy, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
 
-        printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index % u\n", x, y, color[0], color[1], color[2], color[3], depth, index);
-    
+        printf("Trying to delete object with stencil index % u...\n", index);
+        
+        App::GetInstance()->scene->DeleteModel(index);
+    }
+    else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+    {
+        GLfloat depth;
+
+        GLint x = (GLint)app->xPos;
+        GLint y = (GLint)app->yPos;
+
+        int newy = app->camera->GetResolution().y - y;
+
+        glReadPixels(x, newy, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+
         glm::vec3 screenX = glm::vec3(x, newy, depth);
         glm::mat4 view = app->camera->GetView();
         glm::mat4 projection = app->camera->GetProjection();;
         glm::vec4 viewPort = glm::vec4(0, 0, app->camera->GetResolution().x, app->camera->GetResolution().y);
         glm::vec3 pos = glm::unProject(screenX, view, projection, viewPort);
 
-        printf("unProject [%f,%f,%f]\n", pos.x, pos.y, pos.z);
+        printf("Trying to plant model on position [%f,%f,%f]\n", pos.x, pos.y, pos.z);
+
+        App* app = App::GetInstance();
+
+        if (app->model != nullptr && app->shader != nullptr && app->material != nullptr && app->texture != nullptr)
+        {
+            app->scene->AddModel(new DrawableObject(app->model, app->shader, app->material, app->texture, new TransformationTranslate(pos)));
+        }
     }
 }
 
@@ -235,6 +250,7 @@ void App::run()
     lambert->CheckShader();
     phong->CheckShader();
     blinn->CheckShader();
+    this->shader = lambert;
 
     this->camera = new Camera();
     camera->AttachObserver(constant);
@@ -266,8 +282,9 @@ void App::run()
     light3->NotifyObservers();*/
 
     Material* material = new Material(glm::vec3(0.1, 0.1, 0.1), glm::vec3(0.8, 0.8, 0.8), glm::vec3(1.0, 1.0, 1.0), 32);
-    
-    Scene* scene = new Scene();
+    this->material = material;
+
+    this->scene = new Scene();
 
     const float plain[] = {
         //vrchol, normála, uv souøadnice
@@ -284,10 +301,13 @@ void App::run()
     scene->SetSkybox(new DrawableObject(new Model("models/skybox.obj"), constant, material, new Texture("models/skybox.jpg"), skyboxMovement));
     this->skyboxMovement = skyboxMovement;
 
+    this->model = new Model("models/LowPolyTreePack.obj");
+    this->texture = new Texture("models/LowPolyTreePack.png");
+
     scene->AddModel(new DrawableObject(new Model("models/plane.obj"), lambert, material, new Texture("models/grass.jpg"), new TransformationScale(glm::vec3(200.0, 1.0, 200.0))));
     scene->AddModel(new DrawableObject(new Model("models/model.obj"), lambert, material, new Texture("models/test.jpg")));
-    scene->AddModel(new DrawableObject(new Model("models/LowPolyTreePack.obj"), lambert, material, new Texture("models/LowPolyTreePack.png"), new TransformationTranslate(glm::vec3(12.0, 0.0, 16.0))));
-    scene->AddModel(new DrawableObject(new Model("models/LowPolyTreePack.obj"), lambert, material, new Texture("models/LowPolyTreePack.png"), new TransformationTranslate(glm::vec3(-6.0, 0.0, 16.0))));
+    scene->AddModel(new DrawableObject(this->model, lambert, material, this->texture, new TransformationTranslate(glm::vec3(12.0, 0.0, 16.0))));
+    scene->AddModel(new DrawableObject(this->model, lambert, material, this->texture, new TransformationTranslate(glm::vec3(-6.0, 0.0, 16.0))));
     scene->AddModel(new DrawableObject(new Model("models/zombie.obj"), lambert, material, new Texture("models/zombie.png"), new TransformationTranslate(glm::vec3(0.0, 0.0, 12.0))));
 
 

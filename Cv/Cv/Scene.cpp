@@ -9,6 +9,18 @@ void Scene::AddModel(DrawableObject* model)
 	models.push_back(model);
 }
 
+void Scene::DeleteModel(GLuint index)
+{
+	for (int i = 0; i < models.size(); i++)
+	{
+		if (models[i]->Identify(index))
+		{
+			models.erase(std::next(models.begin(),i));
+			return;
+		}
+	}
+}
+
 void Scene::SetSkybox(DrawableObject* model)
 {
 	this->skybox = model;
@@ -27,3 +39,4 @@ void Scene::Render()
 		model->Render();
 	}
 }
+

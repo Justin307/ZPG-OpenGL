@@ -41,3 +41,8 @@ void DrawableObject::Render()
 	model->Render();
 	shader->Unuse();
 }
+
+bool DrawableObject::Identify(GLuint index)
+{
+	return this->id == (char)index;
+}
