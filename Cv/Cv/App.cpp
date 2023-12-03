@@ -28,6 +28,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Light.h"
+#include "Movement.h"
 
 void App::error_callback(int error, const char* description) { fputs(description, stderr); }
 
@@ -65,6 +66,11 @@ void App::key_callback(GLFWwindow* window, int key, int scancode, int action, in
         {
             app->flashLight->SetPosition(app->camera->GetPosition());
         }
+
+        if (app->skyboxMovement != nullptr)
+        {
+            app->skyboxMovement->value = app->camera->GetPosition();
+        }
     }
 }
 
@@ -89,10 +95,6 @@ void App::cursor_callback(GLFWwindow* window, double x, double y)
         if (app->flashLight != nullptr)
         {
             app->flashLight->SetDirection(app->camera->GetDirection());
-        }
-        if (app->skyboxMovement != nullptr)
-        {
-            app->skyboxMovement->value = app->camera->GetPosition();
         }
     }
 }
@@ -241,7 +243,6 @@ void App::run()
     printGLEWInfo();
 
     //Create shader program
-    
     Shader* constant = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\constant.frag"));
     Shader* lambert = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\lambert.frag"));
     Shader* phong = Shader::LoadFromFile(std::string("..\\Cv\\shaders\\vertex.vert"), std::string("..\\Cv\\shaders\\phong.frag"));
@@ -252,6 +253,7 @@ void App::run()
     blinn->CheckShader();
     this->shader = lambert;
 
+    //Attach shader to camera
     this->camera = new Camera();
     camera->AttachObserver(constant);
     camera->AttachObserver(lambert);
@@ -259,59 +261,99 @@ void App::run()
     camera->AttachObserver(blinn);
     camera->NotifyObservers();
 
-    /*PositionedLight* light = new PositionedLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0, 0.0, 15.0));
+    //Create scene
+    this->scene = new Scene();
+
+#define SCENE 3
+
+#if SCENE == 1
+    //Create light
+    PositionedLight* light = new PositionedLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0, 0.0, 0.0));
     light->AttachObserver(lambert);
     light->AttachObserver(phong);
     light->AttachObserver(blinn);
-    light->NotifyObservers();*/
+    light->NotifyObservers();
+
+    //Create material
+    Material* material = new Material(glm::vec3(0.1, 0.1, 0.1), glm::vec3(0.8, 0.8, 0.8), glm::vec3(1.0, 1.0, 1.0), 32);
+
+    //Create texture
+    Texture* texture = new Texture("models/earth.jpg");
+
+    //Create models
+    TransformationTranslate* transformation1 = new TransformationTranslate(glm::vec3(0.5f, 0.0f, 0.0f));
+    TransformationTranslate* transformation2 = new TransformationTranslate(glm::vec3(-0.5f, 0.0f, 0.0f));
+    TransformationTranslate* transformation3 = new TransformationTranslate(glm::vec3(0.0f, 0.0f, 0.5f));
+    TransformationTranslate* transformation4 = new TransformationTranslate(glm::vec3(0.0f, 0.0f, -0.5f));
+    Model* sphere = new Model("models/sphere.obj");
+    scene->AddModel(new DrawableObject(sphere, phong, material, texture, transformation1));
+    scene->AddModel(new DrawableObject(sphere, phong, material, texture, transformation2));
+    scene->AddModel(new DrawableObject(sphere, phong, material, texture, transformation3));
+    scene->AddModel(new DrawableObject(sphere, phong, material, texture, transformation4));
+
+#elif SCENE == 2
+    //Solar system
+
+#elif SCENE == 3
+    //Create lights
+    PositionedLight* light = new PositionedLight(glm::vec4(1.0f, 1.0f, 0.7f, 1.0f), glm::vec3(0.0, 1.0, 15.0));
+    light->AttachObserver(lambert);
+    light->AttachObserver(phong);
+    light->AttachObserver(blinn);
+    light->NotifyObservers();
     ReflectorLight* light2 = new ReflectorLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 1.0f, 0.15f, 0.15f, glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0, -1.0, 0.0), 15.0f);
     light2->AttachObserver(lambert);
     light2->AttachObserver(phong);
     light2->AttachObserver(blinn);
     light2->NotifyObservers();
     this->flashLight = light2;
-    /*ReflectorLight* light4 = new ReflectorLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0, 0.0, 0.0), 2.0f);
-    light4->AttachObserver(lambert);
-    light4->AttachObserver(phong);
-    light4->AttachObserver(blinn);
-    light4->NotifyObservers();*/
     DirectionLight* light3 = new DirectionLight(glm::vec4(0.15f, 0.15f, 0.15f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
     light3->AttachObserver(lambert);
     light3->AttachObserver(phong);
     light3->AttachObserver(blinn);
     light3->NotifyObservers();
 
+    //Create material
     Material* material = new Material(glm::vec3(0.1, 0.1, 0.1), glm::vec3(0.8, 0.8, 0.8), glm::vec3(1.0, 1.0, 1.0), 32);
     this->material = material;
 
-    this->scene = new Scene();
-
-    const float plain[] = {
-        //vrchol, normála, uv souøadnice
-        1.0f, 0.0f, 1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
-        1.0f, 0.0f,-1.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-       -1.0f, 0.0f,-1.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,
-
-       -1.0f, 0.0f, 1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
-       -1.0f, 0.0f,-1.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f
-    };
-
+    //Create skybox
     TransformationTranslate* skyboxMovement = new TransformationTranslate(glm::vec3(0.0, 0.0, 0.0));
     scene->SetSkybox(new DrawableObject(new Model("models/skybox.obj"), constant, material, new Texture("models/skybox_dark.jpg"), skyboxMovement));
     this->skyboxMovement = skyboxMovement;
 
-    this->model = new Model("models/LowPolyTreePack.obj");
-    this->texture = new Texture("models/LowPolyTreePack.png");
+    //Create models
+    Model* model = new Model("models/LowPolyTreePack.obj");
+    this->model = model;
+    Texture* texture = new Texture("models/LowPolyTreePack.png");
+    this->texture = texture;
 
     scene->AddModel(new DrawableObject(new Model("models/plane.obj"), lambert, material, new Texture("models/grass.jpg"), new TransformationScale(glm::vec3(200.0, 1.0, 200.0))));
     scene->AddModel(new DrawableObject(new Model("models/model.obj"), phong, material, new Texture("models/test.jpg")));
-    scene->AddModel(new DrawableObject(this->model, blinn, material, this->texture, new TransformationTranslate(glm::vec3(12.0, 0.0, 16.0))));
-    scene->AddModel(new DrawableObject(this->model, blinn, material, this->texture, new TransformationTranslate(glm::vec3(-6.0, 0.0, 16.0))));
-    scene->AddModel(new DrawableObject(new Model("models/zombie.obj"), lambert, material, new Texture("models/zombie.png"), new TransformationTranslate(glm::vec3(0.0, 0.0, 12.0))));
+    Movement* movement = new CircularMovement(0, 360, 0, 1, 1, glm::vec3(0.0f), 2);
+    scene->AddModel(new DrawableObject(new Model("models/zombie.obj"), lambert, material, new Texture("models/zombie.png"), new TransformationTranslate(glm::vec3(0.0, 0.0, 12.0)), movement));
 
+    srand(time(nullptr));
+    for (int i = 0; i < 200; i++)
+    {
+        float x = (static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (100))));
+        if(rand()%2 == 0)
+			x *= -1;
+        float z = (static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (100))));
+        if (rand() % 2 == 0)
+            z *= -1;
+        TransformationComposite* treeTransformation = new TransformationComposite();
+        treeTransformation->AddTransformation(new TransformationTranslate(glm::vec3(x, -1.0f, z)));
+        float scale = 0.75 + static_cast <float> (rand() / (static_cast <float> (RAND_MAX)));
+        treeTransformation->AddTransformation(new TransformationScale(glm::vec3(scale, scale, scale)));
+        float rotation = static_cast <float> (rand() / (static_cast <float> (RAND_MAX / 360)));
+        treeTransformation->AddTransformation(new TransformationRotate(glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f)));
+        scene->AddModel(new DrawableObject(model, lambert, material, texture, treeTransformation));
+    }
 
-
+#endif
+       
+    //Run Infinite Loop
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

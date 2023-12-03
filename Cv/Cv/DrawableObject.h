@@ -5,21 +5,25 @@
 #include "TransformationComponent.h"
 #include "Material.h"
 #include "Texture.h"
+#include "Movement.h"
 
 class DrawableObject
 {
 private:
-	static char next_id;
+	static unsigned char next_id;
 	Model* model;
 	Shader* shader;
-	TransformationComponent* transformation;
 	Material* material;
 	Texture* texture;
-	char id;
+	TransformationComponent* transformation;
+	Movement* movement;
+	unsigned char id;
 
 public:
 	DrawableObject(Model* model, Shader* shader, Material* material, Texture* texture);
 	DrawableObject(Model* model, Shader* shader, Material* material, Texture* texture, TransformationComponent* transformation);
+	DrawableObject(Model* model, Shader* shader, Material* material, Texture* texture, Movement* movement);
+	DrawableObject(Model* model, Shader* shader, Material* material, Texture* texture, TransformationComponent* transformation, Movement* movement);
 	void Render();
 	bool Identify(GLuint index);
 };
