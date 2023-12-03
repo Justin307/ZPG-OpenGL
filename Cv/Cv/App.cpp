@@ -267,6 +267,8 @@ void App::run()
 #define SCENE 3
 
 #if SCENE == 1
+    //Four balls
+    
     //Create light
     PositionedLight* light = new PositionedLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0, 0.0, 0.0));
     light->AttachObserver(lambert);
@@ -293,6 +295,47 @@ void App::run()
 
 #elif SCENE == 2
     //Solar system
+
+    //Create ligh´t
+    PositionedLight* light = new PositionedLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0, 0.0, 0.0));
+    light->AttachObserver(lambert);
+    light->AttachObserver(phong);
+    light->AttachObserver(blinn);
+    light->NotifyObservers();
+
+    //Create material
+    Material* material = new Material(glm::vec3(0.1, 0.1, 0.1), glm::vec3(0.8, 0.8, 0.8), glm::vec3(1.0, 1.0, 1.0), 32);
+
+    //Create texture
+    Texture* sunTexture = new Texture("models/sun.jpg");
+    Texture* mercuryTexture = new Texture("models/mercury.jpg");
+    Texture* venusTexture = new Texture("models/venus.jpg");
+    Texture* earthTexture = new Texture("models/earth.jpg");
+    Texture* marsTexture = new Texture("models/mars.jpg");
+    Texture* jupiterTexture = new Texture("models/jupiter.jpg");
+    Texture* saturnTexture = new Texture("models/saturn.jpg");
+    Texture* uranusTexture = new Texture("models/uranus.jpg");
+    Texture* neptuneTexture = new Texture("models/neptune.jpg");
+    Texture* plutoTexture = new Texture("models/pluto.jpg");
+
+    //Create models
+    Model* sphere = new Model("models/sphere.obj");
+    scene->AddModel(new DrawableObject(sphere, constant, material, sunTexture, new TransformationScale(glm::vec3(3.0f))));
+    scene->AddModel(new DrawableObject(sphere, phong, material, mercuryTexture, new TransformationScale(glm::vec3(0.5f)), new CircularMovement(0, 360, 0, 1.1421, 1, glm::vec3(0.0f), 0.5)));
+    scene->AddModel(new DrawableObject(sphere, phong, material, venusTexture, new TransformationScale(glm::vec3(0.9f)), new CircularMovement(0, 360, 0, 0.8305, 1, glm::vec3(0.0f), 1)));
+    scene->AddModel(new DrawableObject(sphere, phong, material, earthTexture, new TransformationScale(glm::vec3(1.0f)), new CircularMovement(0, 360, 0, 0.7112, 1, glm::vec3(0.0f), 1.5)));
+    scene->AddModel(new DrawableObject(sphere, phong, material, marsTexture, new TransformationScale(glm::vec3(0.7f)), new CircularMovement(0, 360, 0, 0.5736, 1, glm::vec3(0.0f), 2.5)));
+    scene->AddModel(new DrawableObject(sphere, phong, material, jupiterTexture, new TransformationScale(glm::vec3(1.5f)), new CircularMovement(0, 360, 0, 0.3100, 1, glm::vec3(0.0f), 3.5)));
+    scene->AddModel(new DrawableObject(sphere, phong, material, saturnTexture, new TransformationScale(glm::vec3(1.4f)), new CircularMovement(0, 360, 0, 0.2292, 1, glm::vec3(0.0f), 4.5)));
+    scene->AddModel(new DrawableObject(sphere, phong, material, uranusTexture, new TransformationScale(glm::vec3(0.8f)), new CircularMovement(0, 360, 0, 0.1605, 1, glm::vec3(0.0f), 5.5)));
+    scene->AddModel(new DrawableObject(sphere, phong, material, neptuneTexture, new TransformationScale(glm::vec3(0.8f)), new CircularMovement(0, 360, 0, 0.1319, 1, glm::vec3(0.0f), 6.5)));
+    scene->AddModel(new DrawableObject(sphere, phong, material, plutoTexture, new TransformationScale(glm::vec3(0.3f)), new CircularMovement(0, 360, 0, 0.1146, 1, glm::vec3(0.0f), 8)));
+    TransformationComposite* moonTransformation = new TransformationComposite();
+    TransformationRotate* moonRotation = new TransformationRotate(glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    moonTransformation->AddTransformation(moonRotation);
+    moonTransformation->AddTransformation(new TransformationTranslate(glm::vec3(0.0f, 0.0f, 0.25f)));
+    moonTransformation->AddTransformation(new TransformationScale(glm::vec3(0.25, 0.25, 0.25)));
+    scene->AddModel(new DrawableObject(sphere, phong, material, mercuryTexture, moonTransformation, new CircularMovement(0, 360, 0, 0.7112, 1, glm::vec3(0.0f), 1.5)));
 
 #elif SCENE == 3
     //Create lights
@@ -330,7 +373,7 @@ void App::run()
 
     scene->AddModel(new DrawableObject(new Model("models/plane.obj"), lambert, material, new Texture("models/grass.jpg"), new TransformationScale(glm::vec3(200.0, 1.0, 200.0))));
     scene->AddModel(new DrawableObject(new Model("models/model.obj"), phong, material, new Texture("models/test.jpg")));
-    Movement* movement = new CircularMovement(0, 360, 0, 1, 1, glm::vec3(0.0f), 2);
+    Movement* movement = new LinearMovement(0, 1, 0, 0.01, 0, glm::vec3(-3.0f, 0.0f, 0.0f), glm::vec3(3.0f, 0.0f, 0.0f));
     scene->AddModel(new DrawableObject(new Model("models/zombie.obj"), lambert, material, new Texture("models/zombie.png"), new TransformationTranslate(glm::vec3(0.0, 0.0, 12.0)), movement));
 
     srand(time(nullptr));
@@ -359,6 +402,9 @@ void App::run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         // render scene
         scene->Render();
+#if SCENE == 2
+        moonRotation->angle += 0.1;
+#endif
         // update other events like input handling
         glfwPollEvents();
         // put the stuff we’ve been drawing onto the display
