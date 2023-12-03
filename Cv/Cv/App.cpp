@@ -259,12 +259,12 @@ void App::run()
     camera->AttachObserver(blinn);
     camera->NotifyObservers();
 
-    PositionedLight* light = new PositionedLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0, 0.0, 15.0));
+    /*PositionedLight* light = new PositionedLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0, 0.0, 15.0));
     light->AttachObserver(lambert);
     light->AttachObserver(phong);
     light->AttachObserver(blinn);
-    light->NotifyObservers();
-    ReflectorLight* light2 = new ReflectorLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0, -1.0, 0.0), 5.0f);
+    light->NotifyObservers();*/
+    ReflectorLight* light2 = new ReflectorLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 1.0f, 0.15f, 0.15f, glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0, -1.0, 0.0), 15.0f);
     light2->AttachObserver(lambert);
     light2->AttachObserver(phong);
     light2->AttachObserver(blinn);
@@ -275,11 +275,11 @@ void App::run()
     light4->AttachObserver(phong);
     light4->AttachObserver(blinn);
     light4->NotifyObservers();*/
-    /*DirectionLight* light3 = new DirectionLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+    DirectionLight* light3 = new DirectionLight(glm::vec4(0.15f, 0.15f, 0.15f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
     light3->AttachObserver(lambert);
     light3->AttachObserver(phong);
     light3->AttachObserver(blinn);
-    light3->NotifyObservers();*/
+    light3->NotifyObservers();
 
     Material* material = new Material(glm::vec3(0.1, 0.1, 0.1), glm::vec3(0.8, 0.8, 0.8), glm::vec3(1.0, 1.0, 1.0), 32);
     this->material = material;
@@ -298,16 +298,16 @@ void App::run()
     };
 
     TransformationTranslate* skyboxMovement = new TransformationTranslate(glm::vec3(0.0, 0.0, 0.0));
-    scene->SetSkybox(new DrawableObject(new Model("models/skybox.obj"), constant, material, new Texture("models/skybox.jpg"), skyboxMovement));
+    scene->SetSkybox(new DrawableObject(new Model("models/skybox.obj"), constant, material, new Texture("models/skybox_dark.jpg"), skyboxMovement));
     this->skyboxMovement = skyboxMovement;
 
     this->model = new Model("models/LowPolyTreePack.obj");
     this->texture = new Texture("models/LowPolyTreePack.png");
 
     scene->AddModel(new DrawableObject(new Model("models/plane.obj"), lambert, material, new Texture("models/grass.jpg"), new TransformationScale(glm::vec3(200.0, 1.0, 200.0))));
-    scene->AddModel(new DrawableObject(new Model("models/model.obj"), lambert, material, new Texture("models/test.jpg")));
-    scene->AddModel(new DrawableObject(this->model, lambert, material, this->texture, new TransformationTranslate(glm::vec3(12.0, 0.0, 16.0))));
-    scene->AddModel(new DrawableObject(this->model, lambert, material, this->texture, new TransformationTranslate(glm::vec3(-6.0, 0.0, 16.0))));
+    scene->AddModel(new DrawableObject(new Model("models/model.obj"), phong, material, new Texture("models/test.jpg")));
+    scene->AddModel(new DrawableObject(this->model, blinn, material, this->texture, new TransformationTranslate(glm::vec3(12.0, 0.0, 16.0))));
+    scene->AddModel(new DrawableObject(this->model, blinn, material, this->texture, new TransformationTranslate(glm::vec3(-6.0, 0.0, 16.0))));
     scene->AddModel(new DrawableObject(new Model("models/zombie.obj"), lambert, material, new Texture("models/zombie.png"), new TransformationTranslate(glm::vec3(0.0, 0.0, 12.0))));
 
 

@@ -39,16 +39,17 @@ void main ()
 
 	vec4 diffuse = vec4(0.0);
 	vec4 ambient = vec4(material.ambient, 1.0f) * tex;
+	vec3 worldPos3 = worldPos.xyz / worldPos.w;
 	for(int i = 0; i < lightNumber; i++)
 	{
 		//PositionedLight
 		if(light[i].type == 1)
 		{
-			float distance = length(light[i].position - vec3(worldPos));
+			float distance = length(light[i].position - worldPos3);
 
 			float attenuation = 1.0 / (light[i].constant + light[i].linear * distance + light[i].quadratic * distance * distance);
 
-			vec3 lightDir = normalize(light[i].position - vec3(worldPos));
+			vec3 lightDir = normalize(light[i].position - worldPos3);
 			float diff = max(dot(lightDir, normalize(worldNorm)),0.0);
 			diffuse += (diff * vec4(material.diffuse,1.0f)) * light[i].color * attenuation * tex;
 		}
@@ -62,12 +63,12 @@ void main ()
 		//ReflectorLight
 		else if (light[i].type == 3)
 		{
-			vec3 lightDir = normalize(light[i].position - vec3(worldPos));
+			vec3 lightDir = normalize(light[i].position - worldPos3);
 
 			float angle = dot(-lightDir, normalize(light[i].direction));
 			if(angle >= cos(radians(light[i].angle)))
 			{
-				float distance = length(light[i].position - vec3(worldPos));
+				float distance = length(light[i].position - worldPos3);
 
 				float attenuation = 1.0 / (light[i].constant + light[i].linear * distance + light[i].quadratic * distance * distance);
 				

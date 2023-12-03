@@ -41,18 +41,19 @@ void main ()
 	vec4 diffuse = vec4(0.0);
 	vec4 specular = vec4(0.0);
 	vec4 ambient = vec4(material.ambient, 1.0f) * tex;
+	vec3 worldPos3 = worldPos.xyz / worldPos.w;
 	for(int i = 0; i < lightNumber; i++)
 	{
 		//PositionedLight
 		if(light[i].type == 1)
 		{
-			float distance = length(light[i].position - vec3(worldPos));
+			float distance = length(light[i].position - worldPos3);
 
 			float attenuation = 1.0 / (light[i].constant + light[i].linear * distance + light[i].quadratic * distance * distance);
 		
-			vec3 lightDir = normalize(light[i].position - vec3(worldPos));
+			vec3 lightDir = normalize(light[i].position - worldPos3);
 
-			vec3 viewDir = normalize(cameraPos - vec3(worldPos));
+			vec3 viewDir = normalize(cameraPos - worldPos3);
 
 			vec3 halfwayDir = normalize(lightDir + viewDir );
 
@@ -70,7 +71,7 @@ void main ()
 		{
 			vec3 lightDir = normalize(-light[i].direction);
 
-			vec3 viewDir = normalize(cameraPos - vec3(worldPos));
+			vec3 viewDir = normalize(cameraPos - worldPos3);
 
 			vec3 halfwayDir = normalize(lightDir + viewDir );
 
@@ -84,16 +85,16 @@ void main ()
 		//ReflectorLight
 		else if (light[i].type == 3)
 		{
-			vec3 lightDir = normalize(light[i].position - vec3(worldPos));
+			vec3 lightDir = normalize(light[i].position - worldPos3);
 
 			float angle = dot(-lightDir, normalize(light[i].direction));
 			if(angle >= cos(radians(light[i].angle)))
 			{
-				float distance = length(light[i].position - vec3(worldPos));
+				float distance = length(light[i].position - worldPos3);
 
 				float attenuation = 1.0 / (light[i].constant + light[i].linear * distance + light[i].quadratic * distance * distance);
 
-				vec3 viewDir = normalize(cameraPos - vec3(worldPos));
+				vec3 viewDir = normalize(cameraPos - worldPos3);
 
 				vec3 halfwayDir = normalize(lightDir + viewDir );
 
