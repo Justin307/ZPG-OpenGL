@@ -1,5 +1,7 @@
 #pragma once
 #include <glm/ext/vector_float3.hpp>
+#include <glm/ext/matrix_float4x4.hpp>
+#include <glm/ext/matrix_float4x3.hpp>
 class Movement
 {
 protected:
@@ -15,6 +17,7 @@ protected:
 public:
 	Movement(float tMin, float tMax, float t, float speed, bool shouldReset);
 	virtual glm::vec3 GetNext() = 0;
+	void UpdateT();
 };
 
 class LinearMovement : public Movement
@@ -39,6 +42,11 @@ public:
 
 class BezierMovement : public Movement
 {
-
+private:
+	glm::mat4 A;
+	glm::mat4x3 B;
+public:
+	BezierMovement(float tMin, float tMax, float t, float speed, bool shouldReset, glm::mat4 A, glm::mat4x3 B);
+	glm::vec3 GetNext();
 };
 

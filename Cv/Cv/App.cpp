@@ -375,6 +375,16 @@ void App::run()
     scene->AddModel(new DrawableObject(new Model("models/model.obj"), phong, material, new Texture("models/test.jpg")));
     Movement* movement = new LinearMovement(0, 1, 0, 0.01, 0, glm::vec3(-3.0f, 0.0f, 0.0f), glm::vec3(3.0f, 0.0f, 0.0f));
     scene->AddModel(new DrawableObject(new Model("models/zombie.obj"), lambert, material, new Texture("models/zombie.png"), new TransformationTranslate(glm::vec3(0.0, 0.0, 12.0)), movement));
+    glm::mat4 A = glm::mat4(glm::vec4(-1.0, 3.0, -3.0, 1.0),
+                            glm::vec4(3.0, -6.0, 3.0, 0),
+                            glm::vec4(-3.0, 3.0, 0, 0),
+                            glm::vec4(1, 0, 0, 0));
+    glm::mat4x3 B = glm::mat4x3(glm::vec3(-1, 0, 0),
+                                glm::vec3(0, 1, 0),
+                                glm::vec3(0, -1, 0),
+                                glm::vec3(1, 0, 0));
+    Movement* movement2 = new BezierMovement(0, 1, 0, 0.01, 0, A, B);
+    scene->AddModel(new DrawableObject(new Model("models/zombie.obj"), lambert, material, new Texture("models/zombie.png"), new TransformationTranslate(glm::vec3(0.0, 1.0, 0.0)), movement2));
 
     srand(time(nullptr));
     for (int i = 0; i < 200; i++)
